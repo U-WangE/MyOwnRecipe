@@ -52,5 +52,5 @@ dependencies {
 
     implementation(libs.gson)
     implementation(libs.glide)
-    implementation(libs.glide.compiler)
+    annotationProcessor(libs.glide.compiler)
 }

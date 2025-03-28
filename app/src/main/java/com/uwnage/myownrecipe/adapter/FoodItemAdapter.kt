@@ -31,7 +31,7 @@ class FoodItemAdapter(
             setGlideUrlToImage(foodItem.imageUrl)
             binding.tvHeaderText.text = foodItem.name
             binding.tvSupportText.text = foodItem.supportText
-            binding.tvScore.text = String.format(Locale.getDefault(), "%0.2f", foodItem.score)
+            binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", foodItem.score)
 
             clickListener(foodItem.id)
         }

@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.uwnage.myownrecipe.R
 import com.uwnage.myownrecipe.adapter.FoodItemAdapter
+import com.uwnage.myownrecipe.data.FoodItem
 import com.uwnage.myownrecipe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +27,10 @@ class MainActivity : AppCompatActivity() {
         binding.rvFoodList.adapter = FoodItemAdapter(listOf()) { foodId ->
             // Food Item Click Callback
             //TODO:: Food Item Detail Page 로 이동
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main, RecipeFragment.newInstance(foodId))
+                .addToBackStack(null)
+                .commit()
         }
     }
 }

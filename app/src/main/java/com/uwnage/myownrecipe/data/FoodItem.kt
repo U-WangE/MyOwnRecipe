@@ -7,6 +7,8 @@ data class FoodItem(
     val id: Int,
     @SerializedName("imageUrl")
     val imageUrl: String,
+    @SerializedName("imageDescription")
+    val imageDescription: String,
     @SerializedName("name")
     val name: String,
     @SerializedName("score")
