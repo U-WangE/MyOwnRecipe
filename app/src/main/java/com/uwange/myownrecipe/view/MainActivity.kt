@@ -1,14 +1,11 @@
-package com.uwnage.myownrecipe.view
+package com.uwange.myownrecipe.view
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.uwnage.myownrecipe.R
-import com.uwnage.myownrecipe.adapter.FoodItemAdapter
-import com.uwnage.myownrecipe.data.FoodItem
-import com.uwnage.myownrecipe.databinding.ActivityMainBinding
+import com.uwange.myownrecipe.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -18,19 +15,10 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-        }
-
-        binding.rvFoodList.adapter = FoodItemAdapter(listOf()) { foodId ->
-            // Food Item Click Callback
-            //TODO:: Food Item Detail Page 로 이동
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main, RecipeFragment.newInstance(foodId))
-                .addToBackStack(null)
-                .commit()
         }
     }
 }

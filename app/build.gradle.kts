@@ -1,14 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.safeargs.kotlin)
+    id("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.uwnage.myownrecipe"
+    namespace = "com.uwange.myownrecipe"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.uwnage.myownrecipe"
+        applicationId = "com.uwange.myownrecipe"
         minSdk = 29
         targetSdk = 34
         versionCode = 1
@@ -53,4 +55,8 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)
+
+    // navigation component
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
 }

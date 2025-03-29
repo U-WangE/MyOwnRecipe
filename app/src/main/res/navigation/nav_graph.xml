@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_fragment_food">
+
+    <fragment
+        android:id="@+id/nav_fragment_food"
+        android:name="com.uwange.myownrecipe.view.FoodFragment"
+        android:label="FoodFragment"
+        tools:layout="@layout/fragment_food">
+        <action
+            android:id="@+id/action_foodFragment_to_recipeFragment"
+            app:destination="@id/nav_graph_food">
+            <argument
+                android:name="foodArgumentData"
+                app:argType="com.uwange.myownrecipe.data.FoodArgumentData" />
+        </action>
+    </fragment>
+
+    <include app:graph="@navigation/nav_graph_food" />
+
+</navigation>

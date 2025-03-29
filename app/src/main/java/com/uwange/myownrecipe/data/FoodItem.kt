@@ -1,4 +1,4 @@
-package com.uwnage.myownrecipe.data
+package com.uwange.myownrecipe.data
 
 import com.google.gson.annotations.SerializedName
 

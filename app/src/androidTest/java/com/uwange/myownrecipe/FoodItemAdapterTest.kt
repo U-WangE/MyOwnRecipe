@@ -1,16 +1,14 @@
-package com.uwnage.myownrecipe
+package com.uwange.myownrecipe
 
 import android.content.Context
 import android.util.Log
 import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.uwnage.myownrecipe.adapter.FoodItemAdapter
-import com.uwnage.myownrecipe.data.FoodItem
-import com.uwnage.myownrecipe.databinding.ItemFoodCardBinding
+import com.uwange.myownrecipe.adapter.FoodItemAdapter
+import com.uwange.myownrecipe.data.FoodItem
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -126,8 +124,8 @@ class FoodItemAdapterTest {
 
         foodList = dummyData()
 
-        adapter = FoodItemAdapter(foodList) {
-            Log.i("FoodItemAdapterTest", "Clicked on food item with ID: $it")
+        adapter = FoodItemAdapter(foodList) { id, name ->
+            Log.i("FoodItemAdapterTest", "Clicked on food item with ID: $id , Name: $name")
         }
 
         recyclerView.adapter = adapter

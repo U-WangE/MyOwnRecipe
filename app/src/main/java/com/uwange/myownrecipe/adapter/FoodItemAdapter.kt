@@ -1,18 +1,18 @@
-package com.uwnage.myownrecipe.adapter
+package com.uwange.myownrecipe.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.uwnage.myownrecipe.R
-import com.uwnage.myownrecipe.data.FoodItem
-import com.uwnage.myownrecipe.databinding.ItemFoodCardBinding
+import com.uwange.myownrecipe.R
+import com.uwange.myownrecipe.data.FoodItem
+import com.uwange.myownrecipe.databinding.ItemFoodCardBinding
 import java.util.Locale
 
 class FoodItemAdapter(
     private val foodList: List<FoodItem>,
-    private val callback: (Int) -> Unit
+    private val callback: (Int, String) -> Unit
 ): RecyclerView.Adapter<FoodItemAdapter.FoodItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodItemViewHolder {
@@ -33,7 +33,7 @@ class FoodItemAdapter(
             binding.tvSupportText.text = foodItem.supportText
             binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", foodItem.score)
 
-            clickListener(foodItem.id)
+            clickListener(foodItem.id, foodItem.name)
         }
 
         private fun setGlideUrlToImage(imageUrl: String) {
@@ -45,9 +45,9 @@ class FoodItemAdapter(
                 .into(binding.ivFoodImage) // 이미지 뷰에 로드
         }
 
-        private fun clickListener(id: Int) {
+        private fun clickListener(id: Int, name: String) {
             binding.clFoodCard.setOnClickListener {
-                callback(id)
+                callback(id, name)
             }
         }
     }
