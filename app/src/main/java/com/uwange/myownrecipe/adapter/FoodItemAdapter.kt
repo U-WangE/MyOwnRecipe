@@ -29,6 +29,7 @@ class FoodItemAdapter(
     inner class FoodItemViewHolder(private val binding: ItemFoodCardBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(foodItem: FoodItem) {
             setGlideUrlToImage(foodItem.imageUrl)
+            binding.ivFoodImage.contentDescription = foodItem.imageDescription
             binding.tvHeaderText.text = foodItem.name
             binding.tvSupportText.text = foodItem.supportText
             binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", foodItem.score)
