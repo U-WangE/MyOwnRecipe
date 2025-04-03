@@ -32,8 +32,8 @@ class RecipeItemAdapter(
         fun bind(recipeItem: RecipeItem) {
             setGlideUrlToImage(recipeItem.imageUrl)
             binding.ivFoodImage.contentDescription = recipeItem.imageDescription
-            binding.tvHeaderText.text = recipeItem.name
-            binding.tvSupportText.text = recipeItem.supportText
+            binding.tvHeaderTxt.text = recipeItem.name
+            binding.tvSupportTxt.text = recipeItem.supportTxt
             binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", recipeItem.score)
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 

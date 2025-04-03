@@ -4,4 +4,10 @@
     <string name="hyphen">-</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="edit_upper">EDIT</string>
+
+    <string name="ingredients">재료</string>
+    <string name="recipe_steps">조리순서</string>
+    <string name="review">후기</string>
 </resources>

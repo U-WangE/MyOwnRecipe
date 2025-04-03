@@ -30,8 +30,8 @@ class FoodItemAdapter(
         fun bind(foodItem: FoodItem) {
             setGlideUrlToImage(foodItem.imageUrl)
             binding.ivFoodImage.contentDescription = foodItem.imageDescription
-            binding.tvHeaderText.text = foodItem.name
-            binding.tvSupportText.text = foodItem.supportText
+            binding.tvHeaderTxt.text = foodItem.name
+            binding.tvSupportTxt.text = foodItem.supportTxt
             binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", foodItem.score)
 
             clickListener(foodItem.id, foodItem.name)
