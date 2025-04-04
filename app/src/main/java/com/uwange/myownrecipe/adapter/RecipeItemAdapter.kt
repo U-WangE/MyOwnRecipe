@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.uwange.myownrecipe.R
+import com.uwange.myownrecipe.Util.formatScoreAsString
+import com.uwange.myownrecipe.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.ItemRecipeCardBinding
 import java.util.Locale
@@ -30,23 +32,14 @@ class RecipeItemAdapter(
 
     inner class RecipeItemViewHolder(private val binding: ItemRecipeCardBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(recipeItem: RecipeItem) {
-            setGlideUrlToImage(recipeItem.imageUrl)
+            setGlideUrlToImage(binding.ivFoodImage, recipeItem.imageUrl)
             binding.ivFoodImage.contentDescription = recipeItem.imageDescription
-            binding.tvHeaderTxt.text = recipeItem.name
-            binding.tvSupportTxt.text = recipeItem.supportTxt
-            binding.tvScore.text = String.format(Locale.getDefault(), "%.2f", recipeItem.score)
+            binding.tvRecipeTitle.text = recipeItem.name
+            binding.tvRecipeReview.text = recipeItem.supportContent
+            binding.tvScore.text = formatScoreAsString(recipeItem.score)
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 
             clickListener(recipeItem.id, recipeItem.name)
-        }
-
-        private fun setGlideUrlToImage(imageUrl: String) {
-            Glide.with(binding.root.context)
-                .load(imageUrl) // foodItem 객체에 이미지 URL이 있다고 가정
-                .placeholder(R.drawable.placeholder_image) // 로딩 중 표시할 플레이스홀더 이미지
-                .error(R.drawable.placeholder_image) // 로딩 실패 시 표시할 이미지
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // 디스크 캐싱 전략 설정
-                .into(binding.ivFoodImage) // 이미지 뷰에 로드
         }
 
         private fun clickListener(id: Int, name: String) {

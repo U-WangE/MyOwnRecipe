@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.RecipeFragment">
+    tools:context=".view.FoodListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_top_bar"
@@ -12,20 +12,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingVertical="10dp"
+        android:padding="8dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_food_name"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@color/gray_700"
-            android:textAlignment="center"
+            android:src="@drawable/ic_add_24"
+            android:tint="@color/gray_500"
+            android:padding="8dp"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
 
@@ -35,7 +33,7 @@
         android:id="@+id/rv_food_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        tools:listitem="@layout/item_recipe_card"
+        tools:listitem="@layout/item_food_card"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@id/cl_top_bar"
         app:layout_constraintBottom_toBottomOf="parent"

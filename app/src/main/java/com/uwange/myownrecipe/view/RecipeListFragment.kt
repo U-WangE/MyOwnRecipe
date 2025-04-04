@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.uwange.myownrecipe.adapter.RecipeItemAdapter
 import com.uwange.myownrecipe.data.RecipeItem
-import com.uwange.myownrecipe.databinding.FragmentRecipeBinding
+import com.uwange.myownrecipe.databinding.FragmentRecipeListBinding
 
-class RecipeFragment : Fragment() {
-    private var _binding: FragmentRecipeBinding? = null
-    private val binding: FragmentRecipeBinding get() = _binding!!
+class RecipeListFragment : Fragment() {
+    private var _binding: FragmentRecipeListBinding? = null
+    private val binding: FragmentRecipeListBinding get() = _binding!!
 
-    private val args: RecipeFragmentArgs by navArgs()
+    private val args: RecipeListFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class RecipeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentRecipeBinding.inflate(inflater, container, false)
+        _binding = FragmentRecipeListBinding.inflate(inflater, container, false)
 
         binding.tvFoodName.text = args.foodArgumentData.name
 

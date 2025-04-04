@@ -9,11 +9,11 @@ import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.adapter.FoodItemAdapter
 import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.FoodItem
-import com.uwange.myownrecipe.databinding.FragmentFoodBinding
+import com.uwange.myownrecipe.databinding.FragmentFoodListBinding
 
-class FoodFragment : Fragment() {
-    private var _binding: FragmentFoodBinding? = null
-    private val binding: FragmentFoodBinding get() = _binding!!
+class FoodListFragment : Fragment() {
+    private var _binding: FragmentFoodListBinding? = null
+    private val binding: FragmentFoodListBinding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +23,7 @@ class FoodFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding = FragmentFoodBinding.inflate(inflater, container, false)
+        _binding = FragmentFoodListBinding.inflate(inflater, container, false)
 
         binding.rvFoodList.adapter = FoodItemAdapter(
             listOf(
@@ -111,7 +111,7 @@ class FoodFragment : Fragment() {
         ) { foodId, foodName ->
             // Food Item Click Callback
             findNavController().navigate(
-                FoodFragmentDirections.actionFoodFragmentToRecipeFragment(
+                FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment(
                     FoodArgumentData(
                         id = foodId,
                         name = foodName

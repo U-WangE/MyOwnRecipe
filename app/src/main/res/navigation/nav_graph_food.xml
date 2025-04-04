@@ -3,16 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_food"
-    app:startDestination="@id/nav_fragment_recipe">
+    app:startDestination="@id/nav_fragment_recipe_list">
 
     <fragment
-        android:id="@+id/nav_fragment_recipe"
-        android:name="com.uwange.myownrecipe.view.RecipeFragment"
-        android:label="RecipeFragment"
-        tools:layout="@layout/fragment_recipe">
+        android:id="@+id/nav_fragment_recipe_list"
+        android:name="com.uwange.myownrecipe.view.RecipeListFragment"
+        android:label="RecipeListFragment"
+        tools:layout="@layout/fragment_recipe_list">
         <argument
             android:name="foodArgumentData"
             app:argType="com.uwange.myownrecipe.data.FoodArgumentData" />
+
+        <action
+            android:id="@+id/action_recipeListFragment_to_recipeDetailFragment"
+            app:destination="@id/nav_fragment_recipe_detail">
+            <argument
+                android:name="recipeArgumentData"
+                app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_fragment_recipe_detail"
+        android:name="com.uwange.myownrecipe.view.RecipeDetailFragment"
+        android:label="RecipeDetailFragment"
+        tools:layout="@layout/fragment_recipe_detail">
+        <argument
+            android:name="recipeArgumentData"
+            app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />
     </fragment>
 
 </navigation>
