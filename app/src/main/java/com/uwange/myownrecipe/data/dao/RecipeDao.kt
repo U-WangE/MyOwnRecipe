@@ -1,4 +1,4 @@
-package com.uwange.myownrecipe.data.db
+package com.uwange.myownrecipe.data.dao
 
 import androidx.room.Dao
 

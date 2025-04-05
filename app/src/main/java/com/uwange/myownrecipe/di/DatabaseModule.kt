@@ -1,9 +1,8 @@
 package com.uwange.myownrecipe.di
 
 import android.content.Context
-import com.uwange.myownrecipe.data.db.FoodDao
-import com.uwange.myownrecipe.data.db.FoodDatabase
-import com.uwange.myownrecipe.data.db.RecipeDatabase
+import com.uwange.myownrecipe.data.db.FoodDB
+import com.uwange.myownrecipe.data.db.RecipeDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,20 +16,20 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideFoodDatabase(@ApplicationContext context: Context): FoodDatabase =
-        FoodDatabase.getDatabase(context)
+    fun provideFoodDB(@ApplicationContext context: Context): FoodDB =
+        FoodDB.getDatabase(context)
 
     @Provides
-    fun provideFoodDao(foodDatabase: FoodDatabase) =
-        foodDatabase.foodDao()
+    fun provideFoodDao(foodDB: FoodDB) =
+        foodDB.foodDao()
 
     @Provides
     @Singleton
-    fun provideRecipeDatabase(@ApplicationContext context: Context): RecipeDatabase =
-        RecipeDatabase.getDatabase(context)
+    fun provideRecipeDB(@ApplicationContext context: Context): RecipeDB =
+        RecipeDB.getDatabase(context)
 
     @Provides
-    fun provideRecipeDao(recipeDatabase: RecipeDatabase) =
-        recipeDatabase.recipeDatabaseDao()
+    fun provideRecipeDao(recipeDB: RecipeDB) =
+        recipeDB.recipeDatabaseDao()
 
 }
