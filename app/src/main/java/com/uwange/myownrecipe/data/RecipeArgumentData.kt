@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class RecipeArgumentData(
-    @SerializedName("id")
-    var id: Int,
+    @SerializedName("recipeId")
+    var recipeId: Int,
     @SerializedName("name")
     var name: String,
     @SerializedName("ImageUrl")

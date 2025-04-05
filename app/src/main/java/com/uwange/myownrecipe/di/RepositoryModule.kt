@@ -1,5 +1,6 @@
 package com.uwange.myownrecipe.di
 
+import com.uwange.myownrecipe.data.dao.FoodDao
 import com.uwange.myownrecipe.data.repository.FoodRepo
 import com.uwange.myownrecipe.data.repository.FoodRepoImpl
 import com.uwange.myownrecipe.data.repository.RecipeRepo
@@ -16,8 +17,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideFoodRepo(): FoodRepo =
-        FoodRepoImpl()
+    fun provideFoodRepo(foodDao: FoodDao): FoodRepo =
+        FoodRepoImpl(foodDao)
 
     @Provides
     @Singleton

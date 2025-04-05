@@ -6,8 +6,8 @@ import com.google.gson.annotations.SerializedName
 
 @Parcelize
 data class FoodArgumentData(
-    @SerializedName("id")
-    var id: Int,
+    @SerializedName("foodId")
+    var foodId: Int,
     @SerializedName("name")
     var name: String
 ): Parcelable

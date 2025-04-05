@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.RecipeDetail
 import com.uwange.myownrecipe.data.ResponseForm
+import com.uwange.myownrecipe.data.repository.RecipeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val recipeRepo: RecipeRepo
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow<ResponseForm<RecipeDetail>>(ResponseForm.Loading)
@@ -25,13 +28,18 @@ class RecipeDetailViewModel @Inject constructor(
     private val recipeArgumentData = savedStateHandle.getStateFlow("recipeArgumentData", RecipeArgumentData())
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             recipeArgumentData.collectLatest {
                 _uiState.value = ResponseForm.Loading
-                // TODO:: api 정의 완료 시 처리 필요
-//                val recipe = repository.getRecipeDetail(it.recipeId)
-                _uiState.value = ResponseForm.Success
+                requestRecipeDetail(it.recipeId)
             }
+        }
+    }
+
+    private fun requestRecipeDetail(recipeId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+//        recipeRepo.requestRecipeDetail(recipeId)
+
         }
     }
 }
