@@ -6,13 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.RecipeDetail
 import com.uwange.myownrecipe.data.ResponseForm
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RecipeDetailViewModel(
+@HiltViewModel
+class RecipeDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 

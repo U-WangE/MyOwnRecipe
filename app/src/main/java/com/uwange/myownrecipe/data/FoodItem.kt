@@ -1,10 +1,14 @@
 package com.uwange.myownrecipe.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class FoodItem(
-    @SerializedName("id")
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    @SerializedName("foodId")
+    val foodId: Int,
     @SerializedName("imageUrl")
     val imageUrl: String,
     @SerializedName("imageDescription")

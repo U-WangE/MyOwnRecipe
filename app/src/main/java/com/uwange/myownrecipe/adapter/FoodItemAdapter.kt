@@ -3,14 +3,10 @@ package com.uwange.myownrecipe.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.FoodItem
 import com.uwange.myownrecipe.databinding.ItemFoodCardBinding
-import java.util.Locale
 
 class FoodItemAdapter(
     private val foodList: List<FoodItem>,
@@ -36,7 +32,7 @@ class FoodItemAdapter(
             binding.tvRecipeReview.text = foodItem.recipeReview
             binding.tvScore.text = formatScoreAsString(foodItem.score)
 
-            clickListener(foodItem.id, foodItem.name)
+            clickListener(foodItem.foodId, foodItem.name)
         }
 
         private fun clickListener(id: Int, name: String) {

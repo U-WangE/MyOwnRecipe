@@ -16,9 +16,11 @@ import com.uwange.myownrecipe.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeDetailBinding
 import com.uwange.myownrecipe.viewModel.RecipeDetailViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Locale
 
+@AndroidEntryPoint
 class RecipeDetailFragment : Fragment() {
     private var _binding: FragmentRecipeDetailBinding? = null
     private val binding get() = _binding!!

@@ -38,6 +38,7 @@ class RecipeListFragment : Fragment() {
         val recipeList = listOf(
             RecipeItem(
                 1,
+                1,
                 "https://i.pravatar.cc/300",
                 "A vibrant close-up of a colorful salad with fresh greens, tomatoes, and a light vinaigrette.", // image description
                 true,
@@ -47,6 +48,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 2,
+                1,
                 "https://i.pravatar.cc/400",
                 "A steaming bowl of ramen with rich broth, tender noodles, a soft-boiled egg, and sliced pork.", // image description
                 false,
@@ -56,6 +58,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 3,
+                1,
                 "https://i.pravatar.cc/500",
                 "A golden-brown pizza with melted cheese, pepperoni, and a crispy crust.", // image description
                 false,
@@ -65,6 +68,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 4,
+                1,
                 "https://i.pravatar.cc/600",
                 "A juicy burger with melted cheese, lettuce, tomato, and a special sauce, served on a sesame seed bun.", // image description
                 false,
@@ -74,6 +78,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 5,
+                1,
                 "https://i.pravatar.cc/700",
                 "A plate of crispy fried chicken with a golden-brown crust, served with a side of creamy mashed potatoes.", // image description
                 false,
@@ -83,6 +88,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 6,
+                1,
                 "https://i.pravatar.cc/800",
                 "A decadent chocolate cake with rich frosting and chocolate shavings.", // image description
                 false,
@@ -92,6 +98,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 7,
+                1,
                 "https://i.pravatar.cc/900",
                 "A colorful plate of sushi rolls with fresh fish, vegetables, and rice.", // image description
                 false,
@@ -101,6 +108,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 8,
+                1,
                 "https://i.pravatar.cc/1000",
                 "A plate of fluffy pancakes with fresh berries, whipped cream, and maple syrup.", // image description
                 false,
@@ -110,6 +118,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 9,
+                1,
                 "https://i.pravatar.cc/1100",
                 "A close-up of a spicy Thai curry with coconut milk, vegetables, and tofu.", // image description
                 false,
@@ -119,6 +128,7 @@ class RecipeListFragment : Fragment() {
             ),
             RecipeItem(
                 10,
+                1,
                 "https://i.pravatar.cc/1200",
                 "A plate of spaghetti with rich tomato sauce, meatballs, and parmesan cheese.", // image description
                 false,

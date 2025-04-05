@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.safeargs.kotlin)
     id("kotlin-parcelize")
+
+    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -59,4 +63,16 @@ dependencies {
     // navigation component
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
+    // hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+
+    // room
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
 }
