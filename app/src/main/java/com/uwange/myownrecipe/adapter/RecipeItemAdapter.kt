@@ -35,7 +35,7 @@ class RecipeItemAdapter(
             setGlideUrlToImage(binding.ivFoodImage, recipeItem.imageUrl)
             binding.ivFoodImage.contentDescription = recipeItem.imageDescription
             binding.tvRecipeTitle.text = recipeItem.name
-            binding.tvRecipeReview.text = recipeItem.supportContent
+            binding.tvRecipeReview.text = recipeItem.recipeReview
             binding.tvScore.text = formatScoreAsString(recipeItem.score)
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 

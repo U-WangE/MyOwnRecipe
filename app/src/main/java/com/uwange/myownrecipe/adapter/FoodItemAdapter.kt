@@ -33,7 +33,7 @@ class FoodItemAdapter(
             setGlideUrlToImage(binding.ivFoodImage, foodItem.imageUrl)
             binding.ivFoodImage.contentDescription = foodItem.imageDescription
             binding.tvFoodTitle.text = foodItem.name
-            binding.tvRecipeReview.text = foodItem.supportContent
+            binding.tvRecipeReview.text = foodItem.recipeReview
             binding.tvScore.text = formatScoreAsString(foodItem.score)
 
             clickListener(foodItem.id, foodItem.name)
