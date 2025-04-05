@@ -9,6 +9,7 @@
     <string name="edit_upper">EDIT</string>
     <string name="save_upper">SAVE</string>
 
+    <string name="food">Food</string>
     <string name="ingredients">재료</string>
     <string name="recipe_steps">조리순서</string>
     <string name="review">후기</string>
