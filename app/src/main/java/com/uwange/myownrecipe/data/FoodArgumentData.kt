@@ -10,4 +10,6 @@ data class FoodArgumentData(
     var foodId: Int,
     @SerializedName("name")
     var name: String
-): Parcelable
+): Parcelable {
+    constructor() : this(-1, "")
+}

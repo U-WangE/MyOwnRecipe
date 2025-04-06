@@ -13,9 +13,6 @@
         <action
             android:id="@+id/action_foodListFragment_to_recipeListFragment"
             app:destination="@id/nav_graph_food">
-            <argument
-                android:name="foodArgumentData"
-                app:argType="com.uwange.myownrecipe.data.FoodArgumentData" />
         </action>
     </fragment>
 

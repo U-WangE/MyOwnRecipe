@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
@@ -11,22 +13,22 @@ import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.ItemRecipeCardBinding
 
 class RecipeItemAdapter(
-    private val recipeList: List<RecipeItem>,
     private val callback: (Int, String) -> Unit
-): RecyclerView.Adapter<RecipeItemAdapter.RecipeItemViewHolder>() {
+): ListAdapter<RecipeItem, RecipeItemAdapter.RecipeItemViewHolder>(RecipeDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int, ): RecipeItemAdapter.RecipeItemViewHolder {
         val binding = ItemRecipeCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecipeItemViewHolder(binding)
     }
 
-    override fun getItemCount() = recipeList.size
-
     override fun onBindViewHolder(holder: RecipeItemAdapter.RecipeItemViewHolder, position: Int) {
-        holder.bind(recipeList[position])
+        val recipeItem = getItem(position)
+        holder.bind(recipeItem)
     }
 
-    inner class RecipeItemViewHolder(private val binding: ItemRecipeCardBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class RecipeItemViewHolder(
+        private val binding: ItemRecipeCardBinding
+    ): RecyclerView.ViewHolder(binding.root) {
         fun bind(recipeItem: RecipeItem) {
             setGlideUrlToImage(binding.ivFoodImage, recipeItem.imageUrl)
             binding.ivFoodImage.contentDescription = recipeItem.imageDescription
@@ -44,4 +46,12 @@ class RecipeItemAdapter(
             }
         }
     }
+}
+
+class RecipeDiffCallback: DiffUtil.ItemCallback<RecipeItem>() {
+    override fun areItemsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean =
+        oldItem.recipeId == newItem.recipeId
+
+    override fun areContentsTheSame(oldItem: RecipeItem, newItem: RecipeItem): Boolean =
+        oldItem == newItem
 }

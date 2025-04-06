@@ -43,6 +43,7 @@ class FoodListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupFoodRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -53,7 +54,7 @@ class FoodListFragment : Fragment() {
 
                         }
                         is ResponseForm.Success -> {
-                            foodItemAdapter.submitList(state.data)
+                            foodItemAdapter.submitList(viewModel.getFoodList())
                         }
                         is ResponseForm.Error -> {
 
@@ -67,13 +68,11 @@ class FoodListFragment : Fragment() {
     private fun setupFoodRecyclerView() {
         foodItemAdapter = FoodItemAdapter { foodId, foodName ->
             // Food Item Click Callback
+
+            viewModel.savedFoodArgumentData(FoodArgumentData(foodId = foodId, name = foodName))
+
             findNavController().navigate(
-                FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment(
-                    FoodArgumentData(
-                        foodId = foodId,
-                        name = foodName
-                    )
-                )
+                FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment()
             )
         }
         binding.rvFoodList.adapter = foodItemAdapter

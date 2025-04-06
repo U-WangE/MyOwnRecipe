@@ -3,6 +3,7 @@ package com.uwange.myownrecipe.viewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.FoodItem
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.repository.FoodRepo
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FoodListViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     private val foodRepo: FoodRepo
 ): ViewModel() {
     private val _uiState = MutableStateFlow<ResponseForm<List<FoodItem>>>(ResponseForm.Loading)
@@ -26,13 +27,13 @@ class FoodListViewModel @Inject constructor(
     private var foodList: List<FoodItem>
 
     init {
+        // 같은 Acitivty 에 속한 Fragment 는 ViewModelStoreOwner 을 공유 하기에 ViewModelStoreOwner 에 연결된 SavedStateHandle 를 공유 받을 수 있음
         foodList = savedStateHandle.get<List<FoodItem>>("foodList")?: emptyList()
 
         viewModelScope.launch(Dispatchers.IO) {
             foodRepo.observeFoodDB().collectLatest { foods ->
                 _uiState.value = ResponseForm.Loading
                 if (foodList != foods) {
-                    savedStateHandle["foodList"] = foods
                     setFoodList(foods)
                 }
                 _uiState.value = ResponseForm.Success
@@ -41,8 +42,13 @@ class FoodListViewModel @Inject constructor(
     }
 
     private fun setFoodList(foodList: List<FoodItem>) {
+        savedStateHandle["foodList"] = foodList
         this.foodList = foodList
     }
 
     fun getFoodList(): List<FoodItem> = foodList
+
+    fun savedFoodArgumentData(foodArgumentData: FoodArgumentData) {
+        savedStateHandle["foodArgumentData"] = foodArgumentData
+    }
 }
