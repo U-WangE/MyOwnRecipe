@@ -8,8 +8,8 @@ import kotlinx.parcelize.Parcelize
 data class RecipeArgumentData(
     @SerializedName("recipeId")
     var recipeId: Int,
-    @SerializedName("name")
-    var name: String
+    @SerializedName("foodName")
+    var foodName: String
 ): Parcelable {
     constructor() : this(-1, "")
 }

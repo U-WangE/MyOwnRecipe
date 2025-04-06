@@ -13,7 +13,7 @@ import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.ItemRecipeCardBinding
 
 class RecipeItemAdapter(
-    private val callback: (Int, String) -> Unit
+    private val callback: (Int) -> Unit
 ): ListAdapter<RecipeItem, RecipeItemAdapter.RecipeItemViewHolder>(RecipeDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int, ): RecipeItemAdapter.RecipeItemViewHolder {
@@ -37,12 +37,12 @@ class RecipeItemAdapter(
             binding.tvScore.text = formatScoreAsString(recipeItem.score)
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 
-            clickListener(recipeItem.recipeId, recipeItem.name)
+            clickListener(recipeItem.recipeId)
         }
 
-        private fun clickListener(id: Int, name: String) {
+        private fun clickListener(id: Int) {
             binding.clFoodCard.setOnClickListener {
-                callback(id, name)
+                callback(id)
             }
         }
     }

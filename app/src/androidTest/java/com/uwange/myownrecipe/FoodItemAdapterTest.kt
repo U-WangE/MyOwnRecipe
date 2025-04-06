@@ -124,7 +124,7 @@ class FoodItemAdapterTest {
 
         foodList = dummyData()
 
-        adapter = FoodItemAdapter(foodList) { id, name ->
+        adapter = FoodItemAdapter { id, name ->
             Log.i("FoodItemAdapterTest", "Clicked on food item with ID: $id , Name: $name")
         }
 

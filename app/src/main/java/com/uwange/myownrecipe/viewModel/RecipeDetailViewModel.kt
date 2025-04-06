@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.RecipeDetail
+import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.repository.RecipeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,11 +22,12 @@ class RecipeDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val recipeRepo: RecipeRepo
 ): ViewModel() {
-
     private val _uiState = MutableStateFlow<ResponseForm<RecipeDetail>>(ResponseForm.Loading)
     val uiState: StateFlow<ResponseForm<RecipeDetail>> = _uiState.asStateFlow()
 
     private val recipeArgumentData = savedStateHandle.getStateFlow("recipeArgumentData", RecipeArgumentData())
+
+    private var recipeItem: RecipeItem? = null
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,8 +40,11 @@ class RecipeDetailViewModel @Inject constructor(
 
     private fun requestRecipeDetail(recipeId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-//        recipeRepo.requestRecipeDetail(recipeId)
-
+            recipeItem = recipeRepo.getRecipe(recipeId)
+            _uiState.value = ResponseForm.Success
         }
     }
+
+    fun getFoodName(): String = recipeArgumentData.value.foodName
+    fun getRecipe(): RecipeItem? = recipeItem
 }

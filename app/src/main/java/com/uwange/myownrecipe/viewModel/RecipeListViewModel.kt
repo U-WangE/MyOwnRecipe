@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.FoodArgumentData
-import com.uwange.myownrecipe.data.FoodItem
 import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
@@ -67,4 +66,7 @@ class RecipeListViewModel @Inject constructor(
     fun savedRecipeArgumentData(recipeArgumentData: RecipeArgumentData) {
         savedStateHandle["recipeArgumentData"] = recipeArgumentData
     }
+
+    fun getFoodName(): String =
+        foodArgumentData.value.name
 }

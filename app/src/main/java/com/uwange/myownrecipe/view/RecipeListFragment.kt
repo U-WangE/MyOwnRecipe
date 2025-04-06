@@ -15,8 +15,10 @@ import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeListBinding
 import com.uwange.myownrecipe.viewModel.RecipeListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class RecipeListFragment : Fragment() {
     private var _binding: FragmentRecipeListBinding? = null
     private val binding: FragmentRecipeListBinding get() = _binding!!
@@ -64,10 +66,10 @@ class RecipeListFragment : Fragment() {
     }
 
     private fun setupRecipeRecyclerView() {
-        recipeItemAdapter = RecipeItemAdapter { recipeId, recipeName ->
+        recipeItemAdapter = RecipeItemAdapter { recipeId ->
             // Recipe Item Click Callback
 
-            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, name = recipeName))
+            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodName = viewModel.getFoodName()))
 
             findNavController().navigate(
                 RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailFragment()

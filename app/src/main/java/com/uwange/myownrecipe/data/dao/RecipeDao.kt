@@ -12,4 +12,7 @@ interface RecipeDao {
 
     @Query("Select * From RecipeItem Where foodId = :foodId")
     fun observeFoodDB(foodId: Int): Flow<List<RecipeItem>>
+
+    @Query("Select * From RecipeItem Where recipeId = :recipeId")
+    fun getRecipeByRecipeId(recipeId: Int): RecipeItem
 }

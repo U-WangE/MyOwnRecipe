@@ -6,4 +6,6 @@ import kotlinx.coroutines.flow.Flow
 interface RecipeRepo {
     fun getRecipeList(foodId: Int): List<RecipeItem>
     fun observeRecipeDB(foodId: Int): Flow<List<RecipeItem>>
+
+    fun getRecipe(recipe: Int): RecipeItem
 }

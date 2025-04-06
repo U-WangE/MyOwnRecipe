@@ -1,15 +1,14 @@
 package com.uwange.myownrecipe.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.navArgs
 import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
@@ -18,12 +17,11 @@ import com.uwange.myownrecipe.databinding.FragmentRecipeDetailBinding
 import com.uwange.myownrecipe.viewModel.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.Locale
 
 @AndroidEntryPoint
 class RecipeDetailFragment : Fragment() {
     private var _binding: FragmentRecipeDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding:FragmentRecipeDetailBinding get() = _binding!!
     private lateinit var viewModel: RecipeDetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,17 +62,20 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun uiSetting() {
-        // Set Recipe Image
-//        setGlideUrlToImage(binding.ivFoodImage, viewModel.getFoodImage())
-        // Set Bookmark State
-//        setBookmarkView(viewModel.getBookmarkState() == true)
+        viewModel.getRecipe()?.let {
+            // Set Recipe Image
+            setGlideUrlToImage(binding.ivFoodImage, it.imageUrl)
+            binding.ivFoodImage.contentDescription = it.imageDescription
+            // Set Bookmark State
+            setBookmarkView(it.bookmark)
 
-//        binding.tvFoodName.text = viewModel.getFoodName()
-//        binding.tvScore.text = formatScoreAsString(viewModel.getScore())
-//        binding.tvRecipeTitle.text = viewModel.getRecipeName()
-//        binding.tvIngredients.text = viewModel.getIngredients()
-//        binding.tvRecipeSteps.text = viewModel.getRecipeSteps()
-//        binding.tvRecipeReview.text = viewModel.getRecipeReview()
+            binding.tvFoodName.text = viewModel.getFoodName()
+            binding.tvScore.text = formatScoreAsString(it.score)
+            binding.tvRecipeTitle.text = it.name
+            binding.tvIngredients.text = it.ingredients
+            binding.tvRecipeSteps.text = it.recipeSteps
+            binding.tvRecipeReview.text = it.recipeReview
+        }
     }
 
     private fun setBookmarkView(isBookmarked: Boolean) = with(binding.ivBookmark) {

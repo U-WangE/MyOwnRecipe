@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.safeargs.kotlin)
     id("kotlin-parcelize")
 
-    id("kotlin-kapt")
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
 }
@@ -66,13 +65,10 @@ dependencies {
 
     // hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     // room
     implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
     ksp(libs.room.compiler)
-}
-
-kapt {
-    correctErrorTypes = true
 }
