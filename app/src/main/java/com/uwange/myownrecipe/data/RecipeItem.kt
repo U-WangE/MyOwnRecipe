@@ -33,7 +33,7 @@ data class RecipeItem(
     @SerializedName("name")
     val name: String,
     @SerializedName("score")
-    val score: Float,
+    val score: String,
     @SerializedName("ingredients")
     val ingredients: String,
     @SerializedName("recipeSteps")

@@ -16,7 +16,7 @@ data class FoodItem(
     @SerializedName("name")
     val name: String,
     @SerializedName("score")
-    val score: Float,
+    val score: String,
     @SerializedName("recipeReview")
     val recipeReview: String
 )

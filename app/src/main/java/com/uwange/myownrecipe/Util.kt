@@ -16,7 +16,8 @@ object Util {
             .into(imageView) // 이미지 뷰에 로드
     }
 
-    fun formatScoreAsString(score: Float): String {
-        return String.format(Locale.getDefault(), "%.2f", score)
+    fun formatScoreAsString(score: String): String {
+        //TODO::정규식 필요
+        return if (score != "") String.format(Locale.getDefault(), "%.2f", score.toFloat()) else ""
     }
 }

@@ -32,22 +32,25 @@ class RecipeEditorViewModel @Inject constructor(
     private val recipeEditorArgumentData = savedStateHandle.getStateFlow("recipeEditorArgumentData", RecipeArgumentData())
 
     private var recipeItem: RecipeItem? = null
+    private var foodCategoryList: List<FoodArgumentData> = emptyList()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             recipeEditorArgumentData.collectLatest {
-                Log.d("여기", it.toString())
                 _uiState.value = ResponseForm.Loading
                 requestRecipeDetail(it.recipeId)
             }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            foodCategoryList = foodRepo.getFoodCategoryList()
         }
     }
 
     private fun requestRecipeDetail(recipeId: Int?) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (recipeId != -1 && recipeId != null) {
-                recipeItem = recipeRepo.getRecipe(recipeId)
-            }
+            recipeItem = if (recipeId != -1 && recipeId != null) recipeRepo.getRecipe(recipeId) else null
+
             _uiState.value = ResponseForm.Success
         }
     }
@@ -55,5 +58,5 @@ class RecipeEditorViewModel @Inject constructor(
     fun getFoodName(): String = recipeEditorArgumentData.value.foodName
     fun getRecipe(): RecipeItem? = recipeItem
 
-    fun foodCategoryList(): List<FoodArgumentData> = foodRepo.getFoodCategoryList()
+    fun getFoodCategoryList(): List<FoodArgumentData> = foodCategoryList
 }

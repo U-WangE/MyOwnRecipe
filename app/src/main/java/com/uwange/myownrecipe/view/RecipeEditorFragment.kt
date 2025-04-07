@@ -32,15 +32,12 @@ class RecipeEditorFragment : Fragment() {
 
     private lateinit var viewModel: RecipeEditorViewModel
 
-//    private val args: RecipeEditorFragmentArgs by navArgs()
-
     private var editableSpinner: EditableSpinner? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(this)[RecipeEditorViewModel::class.java]
-//        val recipeArgumentData = args.recipeEditorArgumentData
     }
 
     override fun onCreateView(
@@ -77,32 +74,24 @@ class RecipeEditorFragment : Fragment() {
 
     private fun uiSetting() {
         clickListener()
-        viewModel.getRecipe()?.let {
 
-            setGlideUrlToImage(binding.ivFoodImage, it.imageUrl)
-            binding.ivFoodImage.contentDescription = it.imageDescription
+        viewModel.getRecipe().let {
+            setGlideUrlToImage(binding.ivFoodImage, it?.imageUrl?:"")
+            binding.ivFoodImage.contentDescription = it?.imageDescription?:""
 
-            setBookmarkView(it.bookmark)
+            setBookmarkView(it?.bookmark?:false)
 
-            setupFoodCategorySpinner(it.foodId)
+            setupFoodCategorySpinner(it?.foodId)
 
             binding.tvFoodName.text = viewModel.getFoodName()
             //TODO:: SCORE 입력 양식 정규식 적용 필요
-            binding.etScore.setText(formatScoreAsString(it.score))
-            binding.etRecipeTitle.setText(it.name)
-            binding.etRecipeSteps.setText(it.recipeSteps)
-            binding.etIngredients.setText(it.ingredients)
-            binding.etRecipeReview.setText(it.recipeReview)
-        }?: {
-            setGlideUrlToImage(binding.ivFoodImage, "")
-            setBookmarkView(false)
-            setupFoodCategorySpinner()
-            binding.tvFoodName.text = getString(R.string.new_recipe)
-            binding.etScore.setText(getString(R.string.zero_dotted_zero))
-            binding.etRecipeTitle.setText("")
-            binding.etRecipeSteps.setText("")
-            binding.etIngredients.setText("")
-            binding.etRecipeReview.setText("")
+            binding.etScore.setText(
+                formatScoreAsString(it?.score?:"")
+            )
+            binding.etRecipeTitle.setText(it?.name?:"")
+            binding.etRecipeSteps.setText(it?.recipeSteps?:"")
+            binding.etIngredients.setText(it?.ingredients?:"")
+            binding.etRecipeReview.setText(it?.recipeReview?:"")
         }
     }
 
@@ -115,6 +104,7 @@ class RecipeEditorFragment : Fragment() {
             if (isBookmarked) R.color.yellow_600 else R.color.gray_300,
             null
         )
+        tag = isBookmarked
     }
 
     private fun clickListener() {
@@ -122,19 +112,22 @@ class RecipeEditorFragment : Fragment() {
             //TODO Save 관련 기능 추가
         }
 
-
         //TODO Image Setting 처리
 
         //TODO Back Button 처리
+
+
+        binding.ivBookmark.setOnClickListener {
+            val isBookmarked = binding.ivBookmark.tag as? Boolean ?: false
+            setBookmarkView(!isBookmarked)
+        }
     }
 
     private fun setupFoodCategorySpinner(foodId: Int? = null) {
         //TODO Spinner 적용
         editableSpinner = EditableSpinner(binding.spFoodCategory, binding.etFoodCategory).apply {
-            setup(viewModel.foodCategoryList())
-            foodId?.let {
-                setInitValue(it)
-            }
+            setup(viewModel.getFoodCategoryList())
+            setInitValue(foodId)
         }
     }
 
