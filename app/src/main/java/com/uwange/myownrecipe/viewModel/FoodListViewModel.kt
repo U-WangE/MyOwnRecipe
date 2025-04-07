@@ -1,10 +1,12 @@
 package com.uwange.myownrecipe.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.FoodItem
+import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.repository.FoodRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,5 +52,9 @@ class FoodListViewModel @Inject constructor(
 
     fun savedFoodArgumentData(foodArgumentData: FoodArgumentData) {
         savedStateHandle["foodArgumentData"] = foodArgumentData
+    }
+
+    fun savedFoodEditorArgumentData() {
+        savedStateHandle["recipeEditorArgumentData"] = RecipeArgumentData()
     }
 }

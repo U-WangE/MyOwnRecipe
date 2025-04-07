@@ -66,10 +66,10 @@ class RecipeListFragment : Fragment() {
     }
 
     private fun setupRecipeRecyclerView() {
-        recipeItemAdapter = RecipeItemAdapter { recipeId ->
+        recipeItemAdapter = RecipeItemAdapter { recipeId, foodId ->
             // Recipe Item Click Callback
 
-            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodName = viewModel.getFoodName()))
+            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodId = foodId, foodName = viewModel.getFoodName()))
 
             findNavController().navigate(
                 RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailFragment()

@@ -3,7 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_food"
-    app:startDestination="@id/nav_fragment_recipe_list">
+    app:startDestination="@id/nav_fragment_food_list">
+
+    <fragment
+        android:id="@+id/nav_fragment_food_list"
+        android:name="com.uwange.myownrecipe.view.FoodListFragment"
+        android:label="FoodFragment"
+        tools:layout="@layout/fragment_food_list">
+        <action
+            android:id="@+id/action_foodListFragment_to_recipeListFragment"
+            app:destination="@id/nav_graph_food">
+        </action>
+        <action
+            android:id="@+id/action_foodListFragment_to_recipeEditorFragment"
+            app:destination="@id/nav_fragment_recipe_editor">
+            <!--            <argument-->
+            <!--                android:name="recipeEditorArgumentData"-->
+            <!--                app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />-->
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/nav_fragment_recipe_list"
@@ -21,6 +39,20 @@
         android:name="com.uwange.myownrecipe.view.RecipeDetailFragment"
         android:label="RecipeDetailFragment"
         tools:layout="@layout/fragment_recipe_detail">
+        <action
+            android:id="@+id/action_recipeDetailFragment_to_recipeEditorFragment"
+            app:destination="@id/nav_fragment_recipe_editor">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_fragment_recipe_editor"
+        android:name="com.uwange.myownrecipe.view.RecipeEditorFragment"
+        android:label="RecipeEditorFragment"
+        tools:layout="@layout/fragment_recipe_editor">
+<!--        <argument-->
+<!--            android:name="recipeEditorArgumentData"-->
+<!--            app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />-->
     </fragment>
 
 </navigation>

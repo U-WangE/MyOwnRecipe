@@ -55,6 +55,8 @@ class FoodListFragment : Fragment() {
                         }
                         is ResponseForm.Success -> {
                             foodItemAdapter.submitList(viewModel.getFoodList())
+
+                            clickListener()
                         }
                         is ResponseForm.Error -> {
 
@@ -76,6 +78,16 @@ class FoodListFragment : Fragment() {
             )
         }
         binding.rvFoodList.adapter = foodItemAdapter
+    }
+
+    private fun clickListener() {
+        binding.ivAddRecipe.setOnClickListener {
+            viewModel.savedFoodEditorArgumentData()
+
+            findNavController().navigate(
+                FoodListFragmentDirections.actionFoodListFragmentToRecipeEditorFragment()
+            )
+        }
     }
 
     override fun onDestroy() {

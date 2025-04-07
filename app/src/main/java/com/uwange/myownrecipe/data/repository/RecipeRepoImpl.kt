@@ -14,6 +14,6 @@ class RecipeRepoImpl @Inject constructor(
     override fun observeRecipeDB(foodId: Int): Flow<List<RecipeItem>> =
         recipeDao.observeFoodDB(foodId)
 
-    override fun getRecipe(recipeId: Int): RecipeItem =
+    override fun getRecipe(recipeId: Int): RecipeItem? =
         recipeDao.getRecipeByRecipeId(recipeId)
 }
