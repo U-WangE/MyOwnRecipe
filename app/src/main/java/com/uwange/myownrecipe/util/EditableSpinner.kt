@@ -2,23 +2,23 @@ package com.uwange.myownrecipe.util
 
 import android.R
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.Spinner
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.content.ContextCompat
 import com.uwange.myownrecipe.data.FoodArgumentData
 
 //TODO  SPinner 아이콘으로 변경하고, edittext에 spinner 선택 값 적용하도록 변경해야함
 class EditableSpinner(
-    private val spinner: Spinner,
+    private val imageView: ImageView,
     private val editText: EditText
 ) {
     private var adapter: ArrayAdapter<FoodArgumentData>? = null
     private var modifiedList: MutableList<FoodArgumentData>? = null
+    private var selectedItem: FoodArgumentData? = null
 
     fun setup(foodCategoryList: List<FoodArgumentData>) {
         modifiedList = mutableListOf<FoodArgumentData>()
@@ -26,7 +26,7 @@ class EditableSpinner(
         modifiedList?.addAll(foodCategoryList)
 
         adapter = object: ArrayAdapter<FoodArgumentData>(
-            spinner.context,
+            imageView.context,
             R.layout.simple_spinner_item,
             modifiedList!!
         ) {
@@ -40,9 +40,10 @@ class EditableSpinner(
 
                 if (view is TextView && item != null)
                     view.text = item.name
+
                 return view
             }
-            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val item = getItem(position)
 
@@ -55,35 +56,70 @@ class EditableSpinner(
         }
 
         adapter?.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
-        spinner.adapter = adapter
 
-        spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 0) {
+        val listPopupWindow = ListPopupWindow(imageView.context).apply {
+            setAdapter(adapter)
+            anchorView = editText
+            setOnItemClickListener { _, _, position, _ ->
+                val selectedFoodData = adapter?.getItem(position)
+                this@EditableSpinner.selectedItem = selectedFoodData
+                //선택한 아이템에 따라 동작이 다름
+                editText.setText(selectedFoodData?.name)
+                if (selectedFoodData?.foodId == 0) {
                     editText.setText("")
-                    editText.visibility = VISIBLE
+                    editText.isFocusableInTouchMode = true
+                    editText.isClickable = true
+                    editText.isEnabled = true
+                    editText.isFocusable = true
+                    editText.requestFocus()
+                    editText.setHint("직접입력")
                 } else {
-                    editText.setText("")
-                    editText.visibility = GONE
+                    editText.setText(selectedFoodData?.name)
+                    editText.isFocusableInTouchMode = false
+                    editText.isClickable = false
+                    editText.isEnabled = false
+                    editText.isFocusable = false
+                    editText.clearFocus()
+                    editText.hint = null
                 }
-            }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                editText.setText("")
-                editText.visibility = GONE
+                dismiss()
+
             }
+        }
+
+        imageView.setOnClickListener {
+            listPopupWindow.show()
+        }
+        editText.setOnClickListener {
+            if (selectedItem?.foodId != 0)
+                listPopupWindow.show()
         }
     }
 
+    //초기 선택 되어 있는 item
     fun setInitValue(foodId: Int?) {
         val item = modifiedList?.find { it.foodId == foodId } ?: modifiedList?.first() ?: return
         val position = adapter?.getPosition(item) ?: return
-        spinner.setSelection(position)
+        selectedItem = item
 
-        if (item.foodId == 0) {
-            editText.visibility = VISIBLE
+        //선택한 아이템에 따라 동작이 다름
+        if (position == 0) {
+            editText.setText("")
+            editText.isFocusableInTouchMode = true
+            editText.isClickable = true
+            editText.isEnabled = true
+            editText.isFocusable = true
+            editText.requestFocus()
+            editText.setHint("직접입력")
         } else {
-            editText.visibility = GONE
+            editText.setText(item.name)
+            editText.isFocusableInTouchMode = false
+            editText.isClickable = false
+            editText.isEnabled = false
+            editText.isFocusable = false
+            editText.clearFocus()
+            editText.hint = null
         }
     }
 }

@@ -125,7 +125,7 @@ class RecipeEditorFragment : Fragment() {
 
     private fun setupFoodCategorySpinner(foodId: Int? = null) {
         //TODO Spinner 적용
-        editableSpinner = EditableSpinner(binding.spFoodCategory, binding.etFoodCategory).apply {
+        editableSpinner = EditableSpinner(binding.ivFoodCategory, binding.etFoodCategory).apply {
             setup(viewModel.getFoodCategoryList())
             setInitValue(foodId)
         }

@@ -123,30 +123,26 @@
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
 
-                <FrameLayout
+                <EditText
+                    android:id="@+id/et_food_category"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:textAppearance="?attr/textAppearanceListItem"
+                    android:background="@android:color/transparent"
+                    android:layout_weight="0.9"
                     android:layout_marginStart="8dp"
-                    >
+                    />
 
-                    <EditText
-                        android:id="@+id/et_food_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="text"
-                        android:textAppearance="?attr/textAppearanceListItem"
-                        android:background="@android:color/transparent"
-                        />
-
-                    <Spinner
-                        android:id="@+id/sp_food_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:spinnerMode="dropdown"
-                        />
-
-                </FrameLayout>
+                <ImageView
+                    android:id="@+id/iv_food_category"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:src="@android:drawable/arrow_down_float"
+                    android:scaleType="center"
+                    android:layout_weight="0.15"
+                    android:maxWidth="45dp"
+                    />
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/et_score"
@@ -159,7 +155,7 @@
                     android:textColor="@color/gray_700"
                     android:textAlignment="center"
                     android:background="@android:color/transparent"
-                    android:layout_marginStart="16dp"
+                    android:layout_marginStart="12dp"
                     />
 
                 <ImageView
