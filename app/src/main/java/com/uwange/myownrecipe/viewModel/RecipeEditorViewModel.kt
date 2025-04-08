@@ -55,6 +55,13 @@ class RecipeEditorViewModel @Inject constructor(
         }
     }
 
+    fun saveRecipeItem(foodName:String, recipeItem: RecipeItem) {
+        //TODO:: 반환 값으로 특정 값 필요하다는 toast message 띄우기
+        viewModelScope.launch(Dispatchers.IO) {
+//            recipeRepo.saveRecipeItem(recipeItem)
+        }
+    }
+
     fun getFoodName(): String = recipeEditorArgumentData.value.foodName
     fun getRecipe(): RecipeItem? = recipeItem
 

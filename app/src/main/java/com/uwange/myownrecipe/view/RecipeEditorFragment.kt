@@ -17,6 +17,8 @@ import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.RecipeArgumentData
+import com.uwange.myownrecipe.data.RecipeDetail
+import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeEditorBinding
 import com.uwange.myownrecipe.util.EditableSpinner
@@ -24,6 +26,7 @@ import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlin.io.path.Path
 
 @AndroidEntryPoint
 class RecipeEditorFragment : Fragment() {
@@ -107,9 +110,30 @@ class RecipeEditorFragment : Fragment() {
         tag = isBookmarked
     }
 
+    private fun setupFoodCategorySpinner(foodId: Int? = null) {
+        editableSpinner = EditableSpinner(binding.ivFoodCategory, binding.etFoodCategory).apply {
+            setup(viewModel.getFoodCategoryList())
+            setInitValue(foodId)
+        }
+    }
+
     private fun clickListener() {
         binding.tvSaveBtn.setOnClickListener {
-            //TODO Save 관련 기능 추가
+            viewModel.saveRecipeItem(
+                editableSpinner?.getSelectedItem()?.name?:"",
+                RecipeItem(
+                    recipeId = viewModel.getRecipe()?.recipeId?:-1,
+                    foodId = editableSpinner?.getSelectedItem()?.foodId?:-1,
+                    imageUrl = "",
+                    imageDescription = "",
+                    bookmark = binding.ivBookmark.tag as? Boolean ?: false,
+                    name = binding.etRecipeTitle.text.toString(),
+                    score = binding.etScore.text.toString(),
+                    ingredients = binding.etIngredients.text.toString(),
+                    recipeSteps = binding.etRecipeSteps.text.toString(),
+                    recipeReview = binding.etRecipeReview.text.toString()
+                )
+            )
         }
 
         //TODO Image Setting 처리
@@ -120,14 +144,6 @@ class RecipeEditorFragment : Fragment() {
         binding.ivBookmark.setOnClickListener {
             val isBookmarked = binding.ivBookmark.tag as? Boolean ?: false
             setBookmarkView(!isBookmarked)
-        }
-    }
-
-    private fun setupFoodCategorySpinner(foodId: Int? = null) {
-        //TODO Spinner 적용
-        editableSpinner = EditableSpinner(binding.ivFoodCategory, binding.etFoodCategory).apply {
-            setup(viewModel.getFoodCategoryList())
-            setInitValue(foodId)
         }
     }
 

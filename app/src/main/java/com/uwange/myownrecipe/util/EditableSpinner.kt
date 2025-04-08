@@ -8,10 +8,16 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.core.content.ContextCompat
 import com.uwange.myownrecipe.data.FoodArgumentData
 
-//TODO  SPinner 아이콘으로 변경하고, edittext에 spinner 선택 값 적용하도록 변경해야함
+/**
+ * ImageView, EditText Click 시 -> EditText 아래애 Sinner DropDown List 표시
+ * if (position == 0) EditText Enable  else EditText Disable
+ *
+ * @return selectedItem : FoodArgumentData
+ *  position 0  ->  FoodArgumentData(-1, "직접입력")
+ *  position ...->  FoodArgumentData(foodId, foodName)
+ */
 class EditableSpinner(
     private val imageView: ImageView,
     private val editText: EditText
@@ -22,7 +28,7 @@ class EditableSpinner(
 
     fun setup(foodCategoryList: List<FoodArgumentData>) {
         modifiedList = mutableListOf<FoodArgumentData>()
-        modifiedList?.add(FoodArgumentData(0, "직접입력"))
+        modifiedList?.add(FoodArgumentData(-1, "직접입력"))
         modifiedList?.addAll(foodCategoryList)
 
         adapter = object: ArrayAdapter<FoodArgumentData>(
@@ -65,7 +71,7 @@ class EditableSpinner(
                 this@EditableSpinner.selectedItem = selectedFoodData
                 //선택한 아이템에 따라 동작이 다름
                 editText.setText(selectedFoodData?.name)
-                if (selectedFoodData?.foodId == 0) {
+                if (selectedFoodData?.foodId == -1) {
                     editText.setText("")
                     editText.isFocusableInTouchMode = true
                     editText.isClickable = true
@@ -92,7 +98,7 @@ class EditableSpinner(
             listPopupWindow.show()
         }
         editText.setOnClickListener {
-            if (selectedItem?.foodId != 0)
+            if (selectedItem?.foodId != -1)
                 listPopupWindow.show()
         }
     }
@@ -121,5 +127,12 @@ class EditableSpinner(
             editText.clearFocus()
             editText.hint = null
         }
+    }
+
+    fun getSelectedItem(): FoodArgumentData? {
+        return if (selectedItem != null && editText.text.isNotBlank())
+            FoodArgumentData(selectedItem!!.foodId, editText.text.toString())
+        else
+            null
     }
 }
