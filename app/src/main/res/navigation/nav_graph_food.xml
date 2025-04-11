@@ -12,14 +12,7 @@
         tools:layout="@layout/fragment_food_list">
         <action
             android:id="@+id/action_foodListFragment_to_recipeListFragment"
-            app:destination="@id/nav_graph_food">
-        </action>
-        <action
-            android:id="@+id/action_foodListFragment_to_recipeEditorFragment"
-            app:destination="@id/nav_fragment_recipe_editor">
-            <!--            <argument-->
-            <!--                android:name="recipeEditorArgumentData"-->
-            <!--                app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />-->
+            app:destination="@id/nav_fragment_recipe_list">
         </action>
     </fragment>
 
@@ -50,9 +43,10 @@
         android:name="com.uwange.myownrecipe.view.RecipeEditorFragment"
         android:label="RecipeEditorFragment"
         tools:layout="@layout/fragment_recipe_editor">
-<!--        <argument-->
-<!--            android:name="recipeEditorArgumentData"-->
-<!--            app:argType="com.uwange.myownrecipe.data.RecipeArgumentData" />-->
+        <action
+            android:id="@+id/action_recipeEditorFragment_to_recipeDetailFragment"
+            app:destination="@id/nav_fragment_recipe_detail">
+        </action>
     </fragment>
 
 </navigation>

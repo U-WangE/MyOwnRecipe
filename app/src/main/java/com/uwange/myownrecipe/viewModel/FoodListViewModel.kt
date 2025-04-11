@@ -54,7 +54,7 @@ class FoodListViewModel @Inject constructor(
         savedStateHandle["foodArgumentData"] = foodArgumentData
     }
 
-    fun savedFoodEditorArgumentData() {
-        savedStateHandle["recipeEditorArgumentData"] = RecipeArgumentData()
-    }
+//    fun savedFoodEditorArgumentData() {
+//        savedStateHandle["recipeEditorArgumentData"] = RecipeArgumentData()
+//    }
 }

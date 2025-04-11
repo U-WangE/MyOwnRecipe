@@ -34,8 +34,11 @@ class RecipeListViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             foodArgumentData.collectLatest {
-                if (foodId != it.foodId) {
-                    _uiState.value = ResponseForm.Loading
+                _uiState.value = ResponseForm.Loading
+
+                if (it.foodId == -1) {
+                    _uiState.value = ResponseForm.Error("Not Found Recipe")
+                } else {
                     foodId = it.foodId
                     setRecipeList(requestRecipeList(it.foodId))
                 }
@@ -53,12 +56,12 @@ class RecipeListViewModel @Inject constructor(
         }
     }
 
-    private fun requestRecipeList(foodId: Int) =
-        recipeRepo.getRecipeList(foodId)
+    private fun requestRecipeList(foodId: Int) = recipeRepo.getRecipeList(foodId)
 
     private fun setRecipeList(recipeList: List<RecipeItem>) {
         savedStateHandle["recipeList"] = recipeList
         this.recipeList = recipeList
+        _uiState.value = ResponseForm.Success
     }
 
     fun getRecipeList(): List<RecipeItem> = recipeList
@@ -67,6 +70,5 @@ class RecipeListViewModel @Inject constructor(
         savedStateHandle["recipeArgumentData"] = recipeArgumentData
     }
 
-    fun getFoodName(): String =
-        foodArgumentData.value.name
+    fun getFoodId(): Int = foodId!!
 }

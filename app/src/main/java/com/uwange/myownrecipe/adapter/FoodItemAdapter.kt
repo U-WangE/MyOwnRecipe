@@ -28,13 +28,15 @@ class FoodItemAdapter(
         private val binding: ItemFoodCardBinding
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(foodItem: FoodItem) {
+            binding.tvFoodTitle.text = foodItem.foodName
+
             setGlideUrlToImage(binding.ivFoodImage, foodItem.imageUrl)
             binding.ivFoodImage.contentDescription = foodItem.imageDescription
-            binding.tvFoodTitle.text = foodItem.name
-            binding.tvRecipeReview.text = foodItem.recipeReview
-            binding.tvScore.text = formatScoreAsString(foodItem.score)
 
-            clickListener(foodItem.foodId, foodItem.name)
+            binding.tvScore.text = formatScoreAsString(foodItem.score)
+            binding.tvRecipeReview.text = foodItem.recipeReview
+
+            clickListener(foodItem.foodId, foodItem.foodName)
         }
 
         private fun clickListener(id: Int, name: String) {

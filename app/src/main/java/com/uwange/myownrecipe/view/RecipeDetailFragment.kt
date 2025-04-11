@@ -16,7 +16,6 @@ import com.uwange.myownrecipe.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeDetailBinding
-import com.uwange.myownrecipe.util.EditableSpinner
 import com.uwange.myownrecipe.viewModel.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -76,7 +75,7 @@ class RecipeDetailFragment : Fragment() {
 
             binding.tvFoodName.text = viewModel.getFoodName()
             binding.tvScore.text = formatScoreAsString(it.score)
-            binding.tvRecipeTitle.text = it.name
+            binding.tvRecipeTitle.text = it.recipeName
             binding.tvRecipeSteps.text = it.recipeSteps
             binding.tvIngredients.text = it.ingredients
             binding.tvRecipeReview.text = it.recipeReview
@@ -98,7 +97,7 @@ class RecipeDetailFragment : Fragment() {
 
     private fun clickListener(recipeId: Int, foodId: Int) {
         binding.tvEditBtn.setOnClickListener {
-            viewModel.savedRecipeEditorArgumentData(RecipeArgumentData(recipeId, foodId, viewModel.getFoodName()))
+            viewModel.savedRecipeEditorArgumentData(RecipeArgumentData(recipeId, foodId))
 
             findNavController().navigate(
                 RecipeDetailFragmentDirections.actionRecipeDetailFragmentToRecipeEditorFragment()

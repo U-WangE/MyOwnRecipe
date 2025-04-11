@@ -1,10 +1,12 @@
 package com.uwange.myownrecipe.data
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 @Entity(
     // Food 가 삭제 되면, Food 에 속한 Recipe 도 삭제
@@ -18,26 +20,40 @@ import com.google.gson.annotations.SerializedName
     ],
     indices = [Index(value = ["foodId"])] // foodId 컬럼에 대한 인덱스 생성
 )
+
+@Parcelize
 data class RecipeItem(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("recipeId")
-    val recipeId: Int,
+    val recipeId: Int = 0,
     @SerializedName("foodId")
-    val foodId: Int,
+    var foodId: Int,
+    @SerializedName("recipeName")
+    var recipeName: String,
     @SerializedName("imageUrl")
-    val imageUrl: String,
+    var imageUrl: String,
     @SerializedName("imageDescription")
-    val imageDescription: String,
+    var imageDescription: String,
     @SerializedName("bookmark")
     var bookmark: Boolean,
-    @SerializedName("name")
-    val name: String,
     @SerializedName("score")
-    val score: String,
+    var score: String,
     @SerializedName("ingredients")
-    val ingredients: String,
+    var ingredients: String,
     @SerializedName("recipeSteps")
-    val recipeSteps: String,
+    var recipeSteps: String,
     @SerializedName("recipeReview")
-    val recipeReview: String
-)
+    var recipeReview: String
+): Parcelable {
+    constructor(foodId: Int): this(
+        foodId = foodId,
+        recipeName = "",
+        imageUrl = "",
+        imageDescription = "",
+        bookmark = false,
+        score = "",
+        ingredients = "",
+        recipeSteps = "",
+        recipeReview = ""
+    )
+}

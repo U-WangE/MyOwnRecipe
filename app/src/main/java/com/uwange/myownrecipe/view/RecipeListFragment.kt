@@ -55,6 +55,8 @@ class RecipeListFragment : Fragment() {
                         }
                         is ResponseForm.Success -> {
                             recipeItemAdapter.submitList(viewModel.getRecipeList())
+
+                            clickListener()
                         }
                         is ResponseForm.Error -> {
 
@@ -69,7 +71,7 @@ class RecipeListFragment : Fragment() {
         recipeItemAdapter = RecipeItemAdapter { recipeId, foodId ->
             // Recipe Item Click Callback
 
-            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodId = foodId, foodName = viewModel.getFoodName()))
+            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodId = foodId))
 
             findNavController().navigate(
                 RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailFragment()
@@ -79,6 +81,15 @@ class RecipeListFragment : Fragment() {
         binding.rvFoodList.adapter = recipeItemAdapter
     }
 
+    private fun clickListener() {
+        binding.ivAddRecipe.setOnClickListener {
+            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = -1, foodId = viewModel.getFoodId()))
+
+            findNavController().navigate(
+                RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailFragment()
+            )
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

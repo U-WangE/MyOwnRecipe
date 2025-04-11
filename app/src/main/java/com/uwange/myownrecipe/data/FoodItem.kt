@@ -9,14 +9,14 @@ data class FoodItem(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("foodId")
     val foodId: Int,
-    @SerializedName("imageUrl")
-    val imageUrl: String,
-    @SerializedName("imageDescription")
-    val imageDescription: String,
-    @SerializedName("name")
-    val name: String,
+    @SerializedName("foodName")
+    val foodName: String,
     @SerializedName("score")
     val score: String,
     @SerializedName("recipeReview")
-    val recipeReview: String
+    val recipeReview: String,
+    @SerializedName("imageUrl")
+    val imageUrl: String,
+    @SerializedName("imageDescription")
+    val imageDescription: String
 )

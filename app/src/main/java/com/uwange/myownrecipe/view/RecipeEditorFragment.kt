@@ -1,32 +1,26 @@
 package com.uwange.myownrecipe.view
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
+import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.RecipeArgumentData
-import com.uwange.myownrecipe.data.RecipeDetail
-import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeEditorBinding
-import com.uwange.myownrecipe.util.EditableSpinner
 import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.io.path.Path
 
 @AndroidEntryPoint
 class RecipeEditorFragment : Fragment() {
@@ -34,8 +28,6 @@ class RecipeEditorFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: RecipeEditorViewModel
-
-    private var editableSpinner: EditableSpinner? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,10 +53,31 @@ class RecipeEditorFragment : Fragment() {
                     when (state) {
                         is ResponseForm.Loading -> {
 
-                            uiSetting()
                         }
                         is ResponseForm.Success -> {
                             uiSetting()
+                        }
+                        is ResponseForm.Error -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.saveState.collectLatest { saveState ->
+                    when (saveState) {
+                        is ResponseForm.Loading -> {
+
+                        }
+                        is ResponseForm.Success -> {
+                            viewModel.savedRecipeArgumentData()
+
+                            findNavController().navigate(
+                                RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
+                            )
                         }
                         is ResponseForm.Error -> {
 
@@ -84,14 +97,13 @@ class RecipeEditorFragment : Fragment() {
 
             setBookmarkView(it?.bookmark?:false)
 
-            setupFoodCategorySpinner(it?.foodId)
-
             binding.tvFoodName.text = viewModel.getFoodName()
+
             //TODO:: SCORE 입력 양식 정규식 적용 필요
             binding.etScore.setText(
                 formatScoreAsString(it?.score?:"")
             )
-            binding.etRecipeTitle.setText(it?.name?:"")
+            binding.etRecipeTitle.setText(it?.recipeName?:"")
             binding.etRecipeSteps.setText(it?.recipeSteps?:"")
             binding.etIngredients.setText(it?.ingredients?:"")
             binding.etRecipeReview.setText(it?.recipeReview?:"")
@@ -99,7 +111,6 @@ class RecipeEditorFragment : Fragment() {
     }
 
     private fun setBookmarkView(isBookmarked: Boolean) = with(binding.ivBookmark) {
-        //TODO:: Bookmark 변경시 Repo에 적용
         setBackgroundResource(
             if (isBookmarked) R.drawable.ic_bookmark_24 else R.drawable.ic_bookmark_border_24
         )
@@ -110,29 +121,15 @@ class RecipeEditorFragment : Fragment() {
         tag = isBookmarked
     }
 
-    private fun setupFoodCategorySpinner(foodId: Int? = null) {
-        editableSpinner = EditableSpinner(binding.ivFoodCategory, binding.etFoodCategory).apply {
-            setup(viewModel.getFoodCategoryList())
-            setInitValue(foodId)
-        }
-    }
-
     private fun clickListener() {
         binding.tvSaveBtn.setOnClickListener {
             viewModel.saveRecipeItem(
-                editableSpinner?.getSelectedItem()?.name?:"",
-                RecipeItem(
-                    recipeId = viewModel.getRecipe()?.recipeId?:-1,
-                    foodId = editableSpinner?.getSelectedItem()?.foodId?:-1,
-                    imageUrl = "",
-                    imageDescription = "",
-                    bookmark = binding.ivBookmark.tag as? Boolean ?: false,
-                    name = binding.etRecipeTitle.text.toString(),
-                    score = binding.etScore.text.toString(),
-                    ingredients = binding.etIngredients.text.toString(),
-                    recipeSteps = binding.etRecipeSteps.text.toString(),
-                    recipeReview = binding.etRecipeReview.text.toString()
-                )
+                binding.etRecipeTitle.text.toString(),
+                binding.ivBookmark.tag as? Boolean ?: false,
+                binding.etScore.text.toString(),
+                binding.etIngredients.text.toString(),
+                binding.etRecipeSteps.text.toString(),
+                binding.etRecipeReview.text.toString()
             )
         }
 

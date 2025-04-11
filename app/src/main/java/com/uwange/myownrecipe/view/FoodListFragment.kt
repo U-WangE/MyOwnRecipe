@@ -71,7 +71,7 @@ class FoodListFragment : Fragment() {
         foodItemAdapter = FoodItemAdapter { foodId, foodName ->
             // Food Item Click Callback
 
-            viewModel.savedFoodArgumentData(FoodArgumentData(foodId = foodId, name = foodName))
+            viewModel.savedFoodArgumentData(FoodArgumentData(foodId = foodId, foodName = foodName))
 
             findNavController().navigate(
                 FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment()
@@ -81,12 +81,12 @@ class FoodListFragment : Fragment() {
     }
 
     private fun clickListener() {
-        binding.ivAddRecipe.setOnClickListener {
-            viewModel.savedFoodEditorArgumentData()
+        binding.ivAddFood.setOnClickListener {
+//            viewModel.savedFoodEditorArgumentData()
 
-            findNavController().navigate(
-                FoodListFragmentDirections.actionFoodListFragmentToRecipeEditorFragment()
-            )
+//            findNavController().navigate(
+//                FoodListFragmentDirections.actionFoodListFragmentToRecipeEditorFragment()
+//            )
         }
     }
 

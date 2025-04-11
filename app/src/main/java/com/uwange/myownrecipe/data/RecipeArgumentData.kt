@@ -9,9 +9,7 @@ data class RecipeArgumentData(
     @SerializedName("recipeId")
     var recipeId: Int,
     @SerializedName("foodId")
-    var foodId: Int,
-    @SerializedName("foodName")
-    var foodName: String
+    var foodId: Int
 ): Parcelable {
-    constructor() : this(-1, -1,"")
+    constructor() : this(-1, -1)
 }

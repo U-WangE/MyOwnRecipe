@@ -30,11 +30,12 @@ class RecipeItemAdapter(
         private val binding: ItemRecipeCardBinding
     ): RecyclerView.ViewHolder(binding.root) {
         fun bind(recipeItem: RecipeItem) {
+            binding.tvRecipeTitle.text = recipeItem.recipeName
             setGlideUrlToImage(binding.ivFoodImage, recipeItem.imageUrl)
             binding.ivFoodImage.contentDescription = recipeItem.imageDescription
-            binding.tvRecipeTitle.text = recipeItem.name
-            binding.tvRecipeReview.text = recipeItem.recipeReview
+
             binding.tvScore.text = formatScoreAsString(recipeItem.score)
+            binding.tvRecipeReview.text = recipeItem.recipeReview
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 
             clickListener(recipeItem.recipeId, recipeItem.foodId)

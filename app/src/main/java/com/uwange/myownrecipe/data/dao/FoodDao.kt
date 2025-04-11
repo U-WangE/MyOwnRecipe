@@ -7,6 +7,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FoodDao {
+    @Query("Select * From FoodItem Where foodId = :foodId")
+    fun getFood(foodId: Int): FoodItem?
+
     @Query("Select * From FoodItem")
     fun getFoodList(): List<FoodItem>
 
