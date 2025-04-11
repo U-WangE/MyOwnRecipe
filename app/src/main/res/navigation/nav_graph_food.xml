@@ -8,11 +8,26 @@
     <fragment
         android:id="@+id/nav_fragment_food_list"
         android:name="com.uwange.myownrecipe.view.FoodListFragment"
-        android:label="FoodFragment"
+        android:label="FoodListFragment"
         tools:layout="@layout/fragment_food_list">
         <action
             android:id="@+id/action_foodListFragment_to_recipeListFragment"
             app:destination="@id/nav_fragment_recipe_list">
+        </action>
+        <action
+            android:id="@+id/action_foodListFragment_to_foodEditorFragment"
+            app:destination="@id/nav_fragment_food_editor">
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_fragment_food_editor"
+        android:name="com.uwange.myownrecipe.view.FoodEditorFragment"
+        android:label="FoodEditorFragment"
+        tools:layout="@layout/fragment_food_editor">
+        <action
+            android:id="@+id/action_foodEditorFragment_to_FoodListFragment"
+            app:destination="@id/nav_fragment_food_list">
         </action>
     </fragment>
 
