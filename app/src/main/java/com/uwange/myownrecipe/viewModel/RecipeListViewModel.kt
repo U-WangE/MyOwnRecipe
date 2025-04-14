@@ -32,36 +32,53 @@ class RecipeListViewModel @Inject constructor(
     init {
         recipeList = savedStateHandle.get<List<RecipeItem>>("recipeList") ?: emptyList()
 
+        // Recipe List 화면 init 시 foodId 값 확인
         viewModelScope.launch(Dispatchers.IO) {
-            foodArgumentData.collectLatest {
+            foodArgumentData.collectLatest { argFood ->
                 _uiState.value = ResponseForm.Loading
 
-                if (it.foodId == -1) {
-                    _uiState.value = ResponseForm.Error("Not Found Recipe")
+                if (argFood.foodId == -1) {
+                    _uiState.value = ResponseForm.Error(Exception("Not Found Food ID"))
                 } else {
-                    foodId = it.foodId
-                    setRecipeList(requestRecipeList(it.foodId))
+                    if (foodId != argFood.foodId)
+                        foodId = argFood.foodId
+
+                    requestRecipeList(foodId)
                 }
             }
         }
 
+        // Recipe List 확인용
         viewModelScope.launch(Dispatchers.IO) {
             recipeRepo.observeRecipeDB(foodId).collectLatest { recipes ->
                 _uiState.value = ResponseForm.Loading
-                if (recipeList != recipes) {
-                    setRecipeList(recipes)
+                if (recipeList != recipes.data!!) {
+                    setRecipeList(recipes.data)
                 }
-                _uiState.value = ResponseForm.Success
+                _uiState.value = ResponseForm.Success(recipeList)
             }
         }
     }
 
-    private fun requestRecipeList(foodId: Int) = recipeRepo.getRecipeList(foodId)
+    private fun requestRecipeList(foodId: Int) {
+        when (val recipes = recipeRepo.getRecipeList(foodId)) {
+            is ResponseForm.Success -> {
+                if (recipeList != recipes.data!!)
+                    setRecipeList(recipes.data)
+                else
+                    _uiState.value = ResponseForm.Success(recipeList)
+            }
+            is ResponseForm.Error -> {
+                _uiState.value = ResponseForm.Error(recipes.exception)
+            }
+            else -> {}
+        }
+    }
 
     private fun setRecipeList(recipeList: List<RecipeItem>) {
         savedStateHandle["recipeList"] = recipeList
         this.recipeList = recipeList
-        _uiState.value = ResponseForm.Success
+        _uiState.value = ResponseForm.Success(recipeList)
     }
 
     fun getRecipeList(): List<RecipeItem> = recipeList
@@ -70,5 +87,5 @@ class RecipeListViewModel @Inject constructor(
         savedStateHandle["recipeArgumentData"] = recipeArgumentData
     }
 
-    fun getFoodId(): Int = foodId!!
+    fun getFoodId(): Int = foodId
 }

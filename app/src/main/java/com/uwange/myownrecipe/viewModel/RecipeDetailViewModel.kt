@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.FoodItem
 import com.uwange.myownrecipe.data.RecipeArgumentData
-import com.uwange.myownrecipe.data.RecipeDetail
 import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.repository.FoodRepo
@@ -25,8 +24,8 @@ class RecipeDetailViewModel @Inject constructor(
     private val recipeRepo: RecipeRepo,
     private val foodRepo: FoodRepo
 ): ViewModel() {
-    private val _uiState = MutableStateFlow<ResponseForm<RecipeDetail>>(ResponseForm.Loading)
-    val uiState: StateFlow<ResponseForm<RecipeDetail>> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow<ResponseForm<RecipeItem>>(ResponseForm.Loading)
+    val uiState: StateFlow<ResponseForm<RecipeItem>> = _uiState.asStateFlow()
 
     private val recipeArgumentData = savedStateHandle.getStateFlow("recipeArgumentData", RecipeArgumentData())
 
@@ -44,16 +43,24 @@ class RecipeDetailViewModel @Inject constructor(
 
     private fun requestRecipeDetail(foodId: Int, recipeId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            foodItem = foodRepo.getFood(foodId)
-            recipeItem = recipeRepo.getRecipe(recipeId)
-
-            _uiState.value = when {
-                foodItem == null ->
-                    ResponseForm.Error("Not Found Food")
-                recipeItem == null ->
-                    ResponseForm.Error("Not Found Recipe")
-                else ->
-                    ResponseForm.Success
+            when (val food = foodRepo.getFood(foodId)) {
+                is ResponseForm.Success -> {
+                    when (val recipe = recipeRepo.getRecipe(recipeId)) {
+                        is ResponseForm.Success -> {
+                            foodItem = food.data?.copy()
+                            recipeItem = recipe.data?.copy()
+                            _uiState.value = ResponseForm.Success(recipe.data!!)
+                        }
+                        is ResponseForm.Error -> {
+                            _uiState.value = ResponseForm.Error(recipe.exception)
+                        }
+                        else -> {}
+                    }
+                }
+                is ResponseForm.Error -> {
+                    _uiState.value = ResponseForm.Error(food.exception)
+                }
+                else -> {}
             }
         }
     }

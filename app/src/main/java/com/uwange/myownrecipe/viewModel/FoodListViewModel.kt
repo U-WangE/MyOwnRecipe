@@ -1,12 +1,10 @@
 package com.uwange.myownrecipe.viewModel
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.FoodItem
-import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.repository.FoodRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,26 +33,25 @@ class FoodListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             foodRepo.observeFoodDB().collectLatest { foods ->
                 _uiState.value = ResponseForm.Loading
-                if (foodList != foods) {
-                    setFoodList(foods)
+                when (foods) {
+                    is ResponseForm.Success -> {
+                        if (foodList != foods) {
+                            savedStateHandle["foodList"] = foodList
+                            foodList = foods.data!!
+                        }
+
+                        _uiState.value = ResponseForm.Success(foodList)
+                    }
+                    is ResponseForm.Error -> {
+                        _uiState.value = ResponseForm.Error(foods.exception)
+                    }
+                    else -> {}
                 }
-                _uiState.value = ResponseForm.Success
             }
         }
     }
 
-    private fun setFoodList(foodList: List<FoodItem>) {
-        savedStateHandle["foodList"] = foodList
-        this.foodList = foodList
-    }
-
-    fun getFoodList(): List<FoodItem> = foodList
-
     fun savedFoodArgumentData(foodArgumentData: FoodArgumentData) {
         savedStateHandle["foodArgumentData"] = foodArgumentData
     }
-
-//    fun savedFoodEditorArgumentData() {
-//        savedStateHandle["recipeEditorArgumentData"] = RecipeArgumentData()
-//    }
 }

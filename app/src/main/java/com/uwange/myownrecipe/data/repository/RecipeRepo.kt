@@ -5,9 +5,9 @@ import com.uwange.myownrecipe.data.ResponseForm
 import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepo {
-    fun getRecipeList(foodId: Int): List<RecipeItem>
-    fun observeRecipeDB(foodId: Int): Flow<List<RecipeItem>>
+    fun getRecipeList(foodId: Int): ResponseForm<List<RecipeItem>>
+    fun observeRecipeDB(foodId: Int): Flow<ResponseForm<List<RecipeItem>>>
 
-    fun getRecipe(recipeId: Int): RecipeItem?
-    fun saveRecipeItem(recipeItem: RecipeItem): Flow<Exception?>
+    fun getRecipe(recipeId: Int): ResponseForm<RecipeItem>
+    fun saveRecipeItem(recipeItem: RecipeItem): ResponseForm<Long>
 }

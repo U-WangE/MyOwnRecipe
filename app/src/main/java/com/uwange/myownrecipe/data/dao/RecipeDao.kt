@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.uwange.myownrecipe.data.RecipeItem
 import kotlinx.coroutines.flow.Flow
 
@@ -20,5 +19,5 @@ interface RecipeDao {
     fun getRecipeByRecipeId(recipeId: Int): RecipeItem?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsertRecipeItem(recipeItem: RecipeItem)
+    fun insertRecipeItem(recipeItem: RecipeItem): Long
 }

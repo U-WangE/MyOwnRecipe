@@ -13,8 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
-import com.uwange.myownrecipe.data.FoodArgumentData
-import com.uwange.myownrecipe.data.RecipeArgumentData
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentRecipeEditorBinding
 import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
@@ -91,7 +89,7 @@ class RecipeEditorFragment : Fragment() {
     private fun uiSetting() {
         clickListener()
 
-        viewModel.getRecipe().let {
+        viewModel.getRecipeItem().let {
             setGlideUrlToImage(binding.ivFoodImage, it?.imageUrl?:"")
             binding.ivFoodImage.contentDescription = it?.imageDescription?:""
 
@@ -123,6 +121,7 @@ class RecipeEditorFragment : Fragment() {
 
     private fun clickListener() {
         binding.tvSaveBtn.setOnClickListener {
+            //TODO:: 해당 값 저장시 bookmark 변경되면, food Item 에 해당 값 저장해야함
             viewModel.saveRecipeItem(
                 binding.etRecipeTitle.text.toString(),
                 binding.ivBookmark.tag as? Boolean ?: false,

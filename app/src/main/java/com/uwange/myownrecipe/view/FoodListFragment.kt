@@ -54,7 +54,7 @@ class FoodListFragment : Fragment() {
 
                         }
                         is ResponseForm.Success -> {
-                            foodItemAdapter.submitList(viewModel.getFoodList())
+                            foodItemAdapter.submitList(state.data)
 
                             clickListener()
                         }
@@ -82,11 +82,9 @@ class FoodListFragment : Fragment() {
 
     private fun clickListener() {
         binding.ivAddFood.setOnClickListener {
-//            viewModel.savedFoodEditorArgumentData()
-
-//            findNavController().navigate(
-//                FoodListFragmentDirections.actionFoodListFragmentToRecipeEditorFragment()
-//            )
+            findNavController().navigate(
+                FoodListFragmentDirections.actionFoodListFragmentToFoodEditorFragment()
+            )
         }
     }
 

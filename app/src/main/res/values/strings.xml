@@ -9,6 +9,8 @@
     <string name="edit_upper">EDIT</string>
     <string name="save_upper">SAVE</string>
 
+    <string name="new_food">New Food</string>
+
     <string name="new_recipe">New Recipe</string>
     <string name="food">Food</string>
     <string name="ingredients">재료</string>

@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName
 data class FoodItem(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("foodId")
-    val foodId: Int,
+    val foodId: Int = 0,
     @SerializedName("foodName")
     val foodName: String,
     @SerializedName("score")
@@ -19,4 +19,12 @@ data class FoodItem(
     val imageUrl: String,
     @SerializedName("imageDescription")
     val imageDescription: String
-)
+) {
+    constructor(foodName: String) : this(
+        foodName = foodName,
+        score = "",
+        recipeReview = "",
+        imageUrl = "",
+        imageDescription = ""
+    )
+}
