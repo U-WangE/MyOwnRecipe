@@ -36,7 +36,10 @@ class RecipeDetailViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             recipeArgumentData.collectLatest {
                 _uiState.value = ResponseForm.Loading
-                requestRecipeDetail(it.foodId, it.recipeId)
+                if (it.foodId != null && it.recipeId != null)
+                    requestRecipeDetail(it.foodId!!, it.recipeId!!)
+                else
+                    _uiState.value = ResponseForm.Error(NullPointerException())
             }
         }
     }

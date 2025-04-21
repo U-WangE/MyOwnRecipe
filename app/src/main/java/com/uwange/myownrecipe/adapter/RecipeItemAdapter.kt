@@ -38,7 +38,7 @@ class RecipeItemAdapter(
             binding.tvRecipeReview.text = recipeItem.recipeReview
             binding.ivBookmark.visibility = if (recipeItem.bookmark) VISIBLE else GONE
 
-            clickListener(recipeItem.recipeId, recipeItem.foodId)
+            clickListener(recipeItem.recipeId!!, recipeItem.foodId)
         }
 
         private fun clickListener(recipeId:Int, foodId: Int) {

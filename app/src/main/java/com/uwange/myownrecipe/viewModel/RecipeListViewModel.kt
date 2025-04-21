@@ -1,5 +1,6 @@
 package com.uwange.myownrecipe.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,7 +27,7 @@ class RecipeListViewModel @Inject constructor(
     val uiState: StateFlow<ResponseForm<List<RecipeItem>>> = _uiState.asStateFlow()
 
     private val foodArgumentData = savedStateHandle.getStateFlow("foodArgumentData", FoodArgumentData())
-    private var foodId: Int = -1
+    private var foodId: Int? = null
     private var recipeList: List<RecipeItem>
 
     init {
@@ -37,14 +38,10 @@ class RecipeListViewModel @Inject constructor(
             foodArgumentData.collectLatest { argFood ->
                 _uiState.value = ResponseForm.Loading
 
-                if (argFood.foodId == -1) {
-                    _uiState.value = ResponseForm.Error(Exception("Not Found Food ID"))
-                } else {
-                    if (foodId != argFood.foodId)
-                        foodId = argFood.foodId
+                if (foodId != argFood.foodId)
+                    foodId = argFood.foodId!!
 
-                    requestRecipeList(foodId)
-                }
+                requestRecipeList(foodId!!)
             }
         }
 
@@ -87,5 +84,5 @@ class RecipeListViewModel @Inject constructor(
         savedStateHandle["recipeArgumentData"] = recipeArgumentData
     }
 
-    fun getFoodId(): Int = foodId
+    fun getFoodId(): Int = foodId!!
 }

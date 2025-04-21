@@ -20,8 +20,8 @@ class RecipeRepoImpl @Inject constructor(
         }
     }
 
-    override fun observeRecipeDB(foodId: Int): Flow<ResponseForm<List<RecipeItem>>> {
-        return recipeDao.observeRecipeDB(foodId)
+    override fun observeRecipeDB(foodId: Int?): Flow<ResponseForm<List<RecipeItem>>> {
+        return recipeDao.observeRecipeDB(foodId!!)
             .map { ResponseForm.Success(it) }
             .catch { e ->
                 ResponseForm.Error(Exception("Failed to observe recipe database", e))

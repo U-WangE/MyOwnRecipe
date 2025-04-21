@@ -19,6 +19,7 @@ import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.util.Log
 
 @AndroidEntryPoint
 class RecipeEditorFragment : Fragment() {

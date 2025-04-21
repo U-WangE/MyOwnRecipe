@@ -25,7 +25,7 @@ import kotlinx.parcelize.Parcelize
 data class RecipeItem(
     @PrimaryKey(autoGenerate = true)
     @SerializedName("recipeId")
-    val recipeId: Int = 0,
+    val recipeId: Int? = null,
     @SerializedName("foodId")
     var foodId: Int,
     @SerializedName("recipeName")
@@ -46,6 +46,7 @@ data class RecipeItem(
     var recipeReview: String
 ): Parcelable {
     constructor(foodId: Int): this(
+        recipeId = null,
         foodId = foodId,
         recipeName = "",
         imageUrl = "",

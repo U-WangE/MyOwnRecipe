@@ -95,7 +95,7 @@ class RecipeDetailFragment : Fragment() {
         //TODO Back Button 처리
     }
 
-    private fun clickListener(recipeId: Int, foodId: Int) {
+    private fun clickListener(recipeId: Int?, foodId: Int?) {
         binding.tvEditBtn.setOnClickListener {
             viewModel.savedRecipeEditorArgumentData(RecipeArgumentData(recipeId, foodId))
 

@@ -36,7 +36,7 @@ class FoodItemAdapter(
             binding.tvScore.text = formatScoreAsString(foodItem.score)
             binding.tvRecipeReview.text = foodItem.recipeReview
 
-            clickListener(foodItem.foodId, foodItem.foodName)
+            clickListener(foodItem.foodId!!, foodItem.foodName)
         }
 
         private fun clickListener(id: Int, name: String) {

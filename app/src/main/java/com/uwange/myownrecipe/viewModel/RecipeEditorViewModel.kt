@@ -1,5 +1,6 @@
 package com.uwange.myownrecipe.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -39,31 +40,26 @@ class RecipeEditorViewModel @Inject constructor(
             recipeEditorArgumentData.collectLatest {
                 _uiState.value = ResponseForm.Loading
 
-                requestRecipeDetail(it.recipeId, it.foodId)
+                requestRecipeDetail(it.recipeId, it.foodId!!)
             }
         }
     }
 
-    private fun requestRecipeDetail(recipeId: Int, foodId: Int) {
+    private fun requestRecipeDetail(recipeId: Int?, foodId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (foodId == -1)
-                _uiState.value = ResponseForm.Error(Exception("Not Found Food ID"))
-            else {
-                when(val food = foodRepo.getFood(foodId)) {
-                    is ResponseForm.Success -> {
-                        foodItem = food.data?.copy()
-
-                        if (recipeId == -1) {
-                            recipeItem = RecipeItem(foodId = foodId)
-                            _uiState.value = ResponseForm.Success(recipeItem!!)
-                        } else
-                            setRecipeForDB(recipeId)
-                    }
-                    is ResponseForm.Error -> {
-                        _uiState.value = ResponseForm.Error(food.exception)
-                    }
-                    else -> {}
+            when(val food = foodRepo.getFood(foodId)) {
+                is ResponseForm.Success -> {
+                    foodItem = food.data?.copy()
+                    if (recipeId == null) {
+                        recipeItem = RecipeItem(foodId = foodId)
+                        _uiState.value = ResponseForm.Success(recipeItem!!)
+                    } else
+                        setRecipeForDB(recipeId)
                 }
+                is ResponseForm.Error -> {
+                    _uiState.value = ResponseForm.Error(food.exception)
+                }
+                else -> {}
             }
         }
     }

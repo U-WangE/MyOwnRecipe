@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class RecipeArgumentData(
     @SerializedName("recipeId")
-    var recipeId: Int,
+    var recipeId: Int?,
     @SerializedName("foodId")
-    var foodId: Int
+    var foodId: Int?
 ): Parcelable {
-    constructor() : this(-1, -1)
+    constructor() : this(null, null)
 }
