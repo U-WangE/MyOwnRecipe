@@ -18,25 +18,31 @@ import javax.inject.Inject
 class FoodEditorViewModel @Inject constructor(
     private val foodRepo: FoodRepo
 ): ViewModel() {
-    private val _uiState = MutableStateFlow<ResponseForm<Long>>(ResponseForm.Loading)
-    val uiState: StateFlow<ResponseForm<Long>> = _uiState.asStateFlow()
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _isError = MutableStateFlow<Exception?>(null)
+    val isError: StateFlow<Exception?> = _isError.asStateFlow()
+
+    private val _saveState = MutableStateFlow<Boolean>(false)
+    val saveState: StateFlow<Boolean> = _saveState.asStateFlow()
 
     fun saveNewFood(foodName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = ResponseForm.Loading
+            _isLoading.value = true
+
             if (!isFoodNameDuplicated(foodName)) {
                 when (val rowId = foodRepo.saveFoodItem(foodName)) {
                     is ResponseForm.Success -> {
-                        _uiState.value = ResponseForm.Success(rowId.data!!)
+                        _saveState.value = true
                     }
                     is ResponseForm.Error -> {
-                        _uiState.value = ResponseForm.Error(rowId.exception)
+                        _isError.value = rowId.exception
                     }
-                    else -> {}
                 }
-            } else {
-                _uiState.value = ResponseForm.Error(Exception("Already Exist"))
             }
+
+            _isLoading.value = false
         }
     }
 

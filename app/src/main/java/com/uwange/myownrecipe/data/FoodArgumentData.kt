@@ -8,8 +8,10 @@ import com.google.gson.annotations.SerializedName
 data class FoodArgumentData(
     @SerializedName("foodId")
     var foodId: Int?,
+    @SerializedName("recipeId")
+    var recipeId: Int?,
     @SerializedName("foodName")
     var foodName: String
 ): Parcelable {
-    constructor() : this(null, "")
+    constructor() : this(null, null, "")
 }

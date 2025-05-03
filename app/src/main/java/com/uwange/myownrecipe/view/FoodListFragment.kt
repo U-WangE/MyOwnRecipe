@@ -1,35 +1,40 @@
 package com.uwange.myownrecipe.view
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.adapter.FoodItemAdapter
 import com.uwange.myownrecipe.data.FoodArgumentData
-import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentFoodListBinding
 import com.uwange.myownrecipe.viewModel.FoodListViewModel
+import com.uwange.myownrecipe.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FoodListFragment : Fragment() {
+    private companion object {
+        private const val TAG = "FoodListFragment"
+    }
+
     private var _binding: FragmentFoodListBinding? = null
     private val binding: FragmentFoodListBinding get() = _binding!!
-    private lateinit var viewModel: FoodListViewModel
+
+    private val mainViewModel: MainViewModel by viewModels(ownerProducer = ::requireActivity)
+    private val viewModel: FoodListViewModel by viewModels()
 
     private lateinit var foodItemAdapter: FoodItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[FoodListViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -48,19 +53,21 @@ class FoodListFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is ResponseForm.Loading ->{
+                launch {
+                    viewModel.isLoading.collect {
+                        // TODO:: 로딩 처리
+                    }
+                }
+                launch {
+                    viewModel.isError.collect {
+                        // TODO:: Error 처리
+                    }
+                }
+                launch {
+                    viewModel.itemList.collect { itemList ->
+                        foodItemAdapter.submitList(itemList)
 
-                        }
-                        is ResponseForm.Success -> {
-                            foodItemAdapter.submitList(state.data)
-
-                            clickListener()
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                        clickListener()
                     }
                 }
             }
@@ -70,8 +77,8 @@ class FoodListFragment : Fragment() {
     private fun setupFoodRecyclerView() {
         foodItemAdapter = FoodItemAdapter { foodId, foodName ->
             // Food Item Click Callback
-
-            viewModel.savedFoodArgumentData(FoodArgumentData(foodId = foodId, foodName = foodName))
+            Log.i(TAG, "Food Item Clicked: foodId : $foodId, foodName : $foodName")
+            mainViewModel.saveData("foodArgumentData", FoodArgumentData(foodId, null, foodName))
 
             findNavController().navigate(
                 FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment()

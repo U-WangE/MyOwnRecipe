@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
-import com.uwange.myownrecipe.data.RecipeArgumentData
-import com.uwange.myownrecipe.data.ResponseForm
+import com.uwange.myownrecipe.data.FoodArgumentData
+import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.FragmentRecipeDetailBinding
+import com.uwange.myownrecipe.viewModel.MainViewModel
 import com.uwange.myownrecipe.viewModel.RecipeDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,12 +25,12 @@ import kotlinx.coroutines.launch
 class RecipeDetailFragment : Fragment() {
     private var _binding: FragmentRecipeDetailBinding? = null
     private val binding:FragmentRecipeDetailBinding get() = _binding!!
-    private lateinit var viewModel: RecipeDetailViewModel
+
+    private val mainViewModel: MainViewModel by viewModels(ownerProducer = ::requireActivity)
+    private val viewModel: RecipeDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[RecipeDetailViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -44,28 +45,33 @@ class RecipeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.getMainViewModel(mainViewModel)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is ResponseForm.Loading ->{
+                launch {
+                    viewModel.isLoading.collect {
+                        // TODO:: 로딩 처리
+                    }
+                }
+                launch {
+                    viewModel.isError.collect {
+                        // TODO:: Error 처리
+                    }
+                }
+                launch {
+                    viewModel.recipeItem.collect { recipeDetail ->
+                        uiSetting(recipeDetail)
 
-                        }
-                        is ResponseForm.Success -> {
-                            uiSetting()
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                        clickListener()
                     }
                 }
             }
         }
     }
 
-    private fun uiSetting() {
-        viewModel.getRecipe()?.let {
-            clickListener(it.recipeId, it.foodId)
+    private fun uiSetting(recipeItem: RecipeItem) {
+        recipeItem.let {
 
             // Set Recipe Image
             setGlideUrlToImage(binding.ivFoodImage, it.imageUrl)
@@ -95,9 +101,9 @@ class RecipeDetailFragment : Fragment() {
         //TODO Back Button 처리
     }
 
-    private fun clickListener(recipeId: Int?, foodId: Int?) {
+    private fun clickListener() {
         binding.tvEditBtn.setOnClickListener {
-            viewModel.savedRecipeEditorArgumentData(RecipeArgumentData(recipeId, foodId))
+            viewModel.saveFoodArgumentData()
 
             findNavController().navigate(
                 RecipeDetailFragmentDirections.actionRecipeDetailFragmentToRecipeEditorFragment()

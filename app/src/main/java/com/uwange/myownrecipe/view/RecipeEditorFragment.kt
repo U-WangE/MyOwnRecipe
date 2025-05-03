@@ -5,33 +5,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.R
 import com.uwange.myownrecipe.Util.formatScoreAsString
 import com.uwange.myownrecipe.Util.setGlideUrlToImage
-import com.uwange.myownrecipe.data.ResponseForm
+import com.uwange.myownrecipe.data.FoodArgumentData
+import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.FragmentRecipeEditorBinding
+import com.uwange.myownrecipe.viewModel.MainViewModel
 import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import android.util.Log
 
 @AndroidEntryPoint
 class RecipeEditorFragment : Fragment() {
     private var _binding: FragmentRecipeEditorBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: RecipeEditorViewModel
+    private val mainViewModel: MainViewModel by viewModels(ownerProducer = ::requireActivity)
+    private val viewModel: RecipeEditorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[RecipeEditorViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -46,66 +46,54 @@ class RecipeEditorFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.setSavedStateData(mainViewModel.getData("foodArgumentData") as FoodArgumentData)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is ResponseForm.Loading -> {
-
-                        }
-                        is ResponseForm.Success -> {
-                            uiSetting()
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                launch {
+                    viewModel.isLoading.collect {
+                        // TODO:: 로딩 처리
                     }
                 }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.saveState.collectLatest { saveState ->
-                    when (saveState) {
-                        is ResponseForm.Loading -> {
-
-                        }
-                        is ResponseForm.Success -> {
-                            viewModel.savedRecipeArgumentData()
-
-                            findNavController().navigate(
-                                RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
-                            )
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                launch {
+                    viewModel.isError.collect {
+                        // TODO:: Error 처리
+                    }
+                }
+                launch {
+                    viewModel.recipeItem.collect { recipeItem ->
+                        uiSetting(recipeItem)
+                        clickListener()
+                    }
+                }
+                launch {
+                    viewModel.saveState.collectLatest {
+                        findNavController().navigate(
+                            RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
+                        )
                     }
                 }
             }
         }
     }
 
-    private fun uiSetting() {
-        clickListener()
+    private fun uiSetting(recipeItem: RecipeItem) {
+        recipeItem.let {
+            setGlideUrlToImage(binding.ivFoodImage, it.imageUrl)
+            binding.ivFoodImage.contentDescription = it.imageDescription
 
-        viewModel.getRecipeItem().let {
-            setGlideUrlToImage(binding.ivFoodImage, it?.imageUrl?:"")
-            binding.ivFoodImage.contentDescription = it?.imageDescription?:""
-
-            setBookmarkView(it?.bookmark?:false)
+            setBookmarkView(it.bookmark)
 
             binding.tvFoodName.text = viewModel.getFoodName()
 
             //TODO:: SCORE 입력 양식 정규식 적용 필요
             binding.etScore.setText(
-                formatScoreAsString(it?.score?:"")
+                formatScoreAsString(it.score)
             )
-            binding.etRecipeTitle.setText(it?.recipeName?:"")
-            binding.etRecipeSteps.setText(it?.recipeSteps?:"")
-            binding.etIngredients.setText(it?.ingredients?:"")
-            binding.etRecipeReview.setText(it?.recipeReview?:"")
+            binding.etRecipeTitle.setText(it.recipeName)
+            binding.etRecipeSteps.setText(it.recipeSteps)
+            binding.etIngredients.setText(it.ingredients)
+            binding.etRecipeReview.setText(it.recipeReview)
         }
     }
 

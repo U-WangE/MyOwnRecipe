@@ -6,13 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.databinding.FragmentFoodEditorBinding
 import com.uwange.myownrecipe.viewModel.FoodEditorViewModel
+import com.uwange.myownrecipe.viewModel.MainViewModel
 import com.uwange.myownrecipe.viewModel.RecipeEditorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,12 +25,10 @@ class FoodEditorFragment : Fragment() {
     private var _binding: FragmentFoodEditorBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: FoodEditorViewModel
+    private val viewModel: FoodEditorViewModel by viewModels()
 
-            override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[FoodEditorViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -48,17 +49,19 @@ class FoodEditorFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is ResponseForm.Loading -> {
-
-                        }
-                        is ResponseForm.Success -> {
-
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                launch {
+                    viewModel.isLoading.collect {
+                        // TODO:: 로딩 처리
+                    }
+                }
+                launch {
+                    viewModel.isError.collect {
+                        // TODO:: Error 처리
+                    }
+                }
+                launch {
+                    viewModel.saveState.collect {
+                        //TODO::PopBackStack
                     }
                 }
             }

@@ -12,7 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,37 +23,43 @@ class FoodListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val foodRepo: FoodRepo
 ): ViewModel() {
-    private val _uiState = MutableStateFlow<ResponseForm<List<FoodItem>>>(ResponseForm.Loading)
-    val uiState: StateFlow<ResponseForm<List<FoodItem>>> = _uiState.asStateFlow()
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private var foodList: List<FoodItem>
+    private val _isError = MutableStateFlow<Exception?>(null)
+    val isError: StateFlow<Exception?> = _isError.asStateFlow()
+
+    private val _itemList = MutableStateFlow<List<FoodItem>>(emptyList())
+    val itemList: StateFlow<List<FoodItem>> = _itemList.asStateFlow()
+
+    private var restoreFoodList: List<FoodItem> = savedStateHandle.get<List<FoodItem>>("foodList")?: emptyList()
 
     init {
-        // 같은 Acitivty 에 속한 Fragment 는 ViewModelStoreOwner 을 공유 하기에 ViewModelStoreOwner 에 연결된 SavedStateHandle 를 공유 받을 수 있음
-        foodList = savedStateHandle.get<List<FoodItem>>("foodList")?: emptyList()
+        if (restoreFoodList.isNotEmpty())
+            _itemList.value = restoreFoodList
 
-        viewModelScope.launch(Dispatchers.IO) {
-            foodRepo.observeFoodDB().collectLatest { foods ->
-                _uiState.value = ResponseForm.Loading
-                when (foods) {
-                    is ResponseForm.Success -> {
-                        if (foodList != foods) {
-                            savedStateHandle["foodList"] = foodList
-                            foodList = foods.data!!
-                        }
-
-                        _uiState.value = ResponseForm.Success(foodList)
-                    }
-                    is ResponseForm.Error -> {
-                        _uiState.value = ResponseForm.Error(foods.exception)
-                    }
-                    else -> {}
-                }
-            }
-        }
+        fetchData()
     }
 
-    fun savedFoodArgumentData(foodArgumentData: FoodArgumentData) {
-        savedStateHandle["foodArgumentData"] = foodArgumentData
+    private fun fetchData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            foodRepo.observeFoodDB()
+                .onCompletion { _isLoading.value = false }
+                .catch { _isError.value = Exception(it) }
+                .collectLatest { foods ->
+                    _isLoading.value = true
+                    when (foods) {
+                        is ResponseForm.Success -> {
+                            if (restoreFoodList != foods.data) {
+                                savedStateHandle["foodList"] = restoreFoodList
+                                _itemList.value = foods.data!!
+                            }
+                        }
+                        is ResponseForm.Error -> {
+                            _isError.value = foods.exception
+                        }
+                    }
+                }
+        }
     }
 }

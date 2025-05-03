@@ -3,75 +3,92 @@ package com.uwange.myownrecipe.viewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.uwange.myownrecipe.data.FoodItem
-import com.uwange.myownrecipe.data.RecipeArgumentData
+import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.data.ResponseForm
-import com.uwange.myownrecipe.data.repository.FoodRepo
 import com.uwange.myownrecipe.data.repository.RecipeRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RecipeDetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    private val recipeRepo: RecipeRepo,
-    private val foodRepo: FoodRepo
+    private val recipeRepo: RecipeRepo
 ): ViewModel() {
-    private val _uiState = MutableStateFlow<ResponseForm<RecipeItem>>(ResponseForm.Loading)
-    val uiState: StateFlow<ResponseForm<RecipeItem>> = _uiState.asStateFlow()
+    private var mainViewModel: MainViewModel? = null
 
-    private val recipeArgumentData = savedStateHandle.getStateFlow("recipeArgumentData", RecipeArgumentData())
+    private val _isLoading = MutableStateFlow<Boolean>(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private var foodItem: FoodItem? = null
-    private var recipeItem: RecipeItem? = null
+    private val _isError = MutableStateFlow<Exception?>(null)
+    val isError: StateFlow<Exception?> = _isError.asStateFlow()
+
+    private val _recipeItem = MutableStateFlow<RecipeItem>(RecipeItem())
+    val recipeItem: StateFlow<RecipeItem> = _recipeItem.asStateFlow()
+
+    private val foodArgumentData = savedStateHandle.getStateFlow("foodArgumentData", FoodArgumentData())
+    private var restoreRecipeItem = savedStateHandle.get<RecipeItem>("recipeItem")
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            recipeArgumentData.collectLatest {
-                _uiState.value = ResponseForm.Loading
-                if (it.foodId != null && it.recipeId != null)
-                    requestRecipeDetail(it.foodId!!, it.recipeId!!)
-                else
-                    _uiState.value = ResponseForm.Error(NullPointerException())
+        viewModelScope.launch {
+            foodArgumentData.collect {
             }
+        }
+        if (restoreRecipeItem != null &&
+            foodArgumentData.value.foodId == restoreRecipeItem?.foodId &&
+            foodArgumentData.value.recipeId == restoreRecipeItem?.recipeId
+        )
+            _recipeItem.value = restoreRecipeItem!!
+
+        fetchData()
+    }
+
+    fun getMainViewModel(mainViewModel: MainViewModel) {
+        this.mainViewModel = mainViewModel
+    }
+
+    fun getMainArgumentData() {
+        mainViewModel?.getData("foodArgumentData")?.let {
+            savedStateHandle["foodArgumentData"] = it as FoodArgumentData
         }
     }
 
-    private fun requestRecipeDetail(foodId: Int, recipeId: Int) {
+    private fun fetchData() {
         viewModelScope.launch(Dispatchers.IO) {
-            when (val food = foodRepo.getFood(foodId)) {
-                is ResponseForm.Success -> {
-                    when (val recipe = recipeRepo.getRecipe(recipeId)) {
-                        is ResponseForm.Success -> {
-                            foodItem = food.data?.copy()
-                            recipeItem = recipe.data?.copy()
-                            _uiState.value = ResponseForm.Success(recipe.data!!)
-                        }
-                        is ResponseForm.Error -> {
-                            _uiState.value = ResponseForm.Error(recipe.exception)
-                        }
-                        else -> {}
+            try {
+                _isLoading.value = true
+                when (val recipe = recipeRepo.getRecipe(foodArgumentData.value.recipeId!!)) {
+                    is ResponseForm.Success -> {
+                        setRecipeItem(recipe.data!!)
+                    }
+
+                    is ResponseForm.Error -> {
+                        _isError.value = recipe.exception
                     }
                 }
-                is ResponseForm.Error -> {
-                    _uiState.value = ResponseForm.Error(food.exception)
-                }
-                else -> {}
+            } catch (e: Exception) {
+                _isError.value = e
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    fun savedRecipeEditorArgumentData(recipeEditorArgumentData: RecipeArgumentData) {
-        savedStateHandle["recipeEditorArgumentData"] = recipeEditorArgumentData
+    private fun setRecipeItem(recipeItem: RecipeItem) {
+        savedStateHandle["recipeItem"] = recipeItem
+        this.restoreRecipeItem = recipeItem
+        _recipeItem.value = recipeItem
     }
 
-    fun getFoodName(): String = foodItem?.foodName!!
-    fun getRecipe(): RecipeItem? = recipeItem
+    fun getFoodName(): String = foodArgumentData.value.foodName
+
+    fun saveFoodArgumentData() {
+        val foodArgumentData = foodArgumentData.value.copy(recipeId = recipeItem.value.recipeId)
+        savedStateHandle["foodArgumentData"] = foodArgumentData
+    }
 }

@@ -27,7 +27,7 @@ data class RecipeItem(
     @SerializedName("recipeId")
     val recipeId: Int? = null,
     @SerializedName("foodId")
-    var foodId: Int,
+    var foodId: Int?,
     @SerializedName("recipeName")
     var recipeName: String,
     @SerializedName("imageUrl")
@@ -45,9 +45,9 @@ data class RecipeItem(
     @SerializedName("recipeReview")
     var recipeReview: String
 ): Parcelable {
-    constructor(foodId: Int): this(
+    constructor(): this(
         recipeId = null,
-        foodId = foodId,
+        foodId = null,
         recipeName = "",
         imageUrl = "",
         imageDescription = "",

@@ -42,7 +42,8 @@
         </action>
         <action
             android:id="@+id/action_recipeListFragment_to_recipeEditorFragment"
-            app:destination="@id/nav_fragment_recipe_editor" />
+            app:destination="@id/nav_fragment_recipe_editor" >
+        </action>
     </fragment>
 
     <fragment

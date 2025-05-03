@@ -5,15 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.adapter.RecipeItemAdapter
-import com.uwange.myownrecipe.data.RecipeArgumentData
-import com.uwange.myownrecipe.data.ResponseForm
+import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.databinding.FragmentRecipeListBinding
+import com.uwange.myownrecipe.viewModel.MainViewModel
 import com.uwange.myownrecipe.viewModel.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -22,14 +22,15 @@ import kotlinx.coroutines.launch
 class RecipeListFragment : Fragment() {
     private var _binding: FragmentRecipeListBinding? = null
     private val binding: FragmentRecipeListBinding get() = _binding!!
-    private lateinit var viewModel: RecipeListViewModel
+
+    private val mainViewModel: MainViewModel by viewModels(ownerProducer = ::requireActivity)
+
+    private val viewModel: RecipeListViewModel by viewModels()
 
     private lateinit var recipeItemAdapter: RecipeItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(this)[RecipeListViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -44,23 +45,29 @@ class RecipeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.setSavedStateData(mainViewModel.getData("foodArgumentData") as FoodArgumentData)
+
         setupRecipeRecyclerView()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    when (state) {
-                        is ResponseForm.Loading ->{
+                launch {
+                    viewModel.isLoading.collect {
+                        // TODO:: 로딩 처리
+                    }
+                }
+                launch {
+                    viewModel.isError.collect {
+                        // TODO:: Error 처리
+                    }
+                }
+                launch {
+                    viewModel.itemList.collect { itemList ->
+                        recipeItemAdapter.submitList(itemList)
 
-                        }
-                        is ResponseForm.Success -> {
-                            recipeItemAdapter.submitList(viewModel.getRecipeList())
+                        binding.tvFoodName.text = viewModel.getFoodName()
 
-                            clickListener()
-                        }
-                        is ResponseForm.Error -> {
-
-                        }
+                        clickListener()
                     }
                 }
             }
@@ -68,10 +75,11 @@ class RecipeListFragment : Fragment() {
     }
 
     private fun setupRecipeRecyclerView() {
-        recipeItemAdapter = RecipeItemAdapter { recipeId, foodId ->
-            // Recipe Item Click Callback
+        recipeItemAdapter = RecipeItemAdapter { recipeId ->
 
-            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = recipeId, foodId = foodId))
+            viewModel.saveFoodArgumentData(recipeId).let {
+                mainViewModel.saveData("foodArgumentData", it)
+            }
 
             findNavController().navigate(
                 RecipeListFragmentDirections.actionRecipeListFragmentToRecipeDetailFragment()
@@ -83,7 +91,9 @@ class RecipeListFragment : Fragment() {
 
     private fun clickListener() {
         binding.ivAddRecipe.setOnClickListener {
-            viewModel.savedRecipeArgumentData(RecipeArgumentData(recipeId = null, foodId = viewModel.getFoodId()))
+            viewModel.saveFoodArgumentData().let {
+                mainViewModel.saveData("foodArgumentData", it)
+            }
 
             findNavController().navigate(
                 RecipeListFragmentDirections.actionRecipeListFragmentToRecipeEditorFragment()

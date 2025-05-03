@@ -6,5 +6,4 @@ sealed class ResponseForm<out T>(
 ) {
     class Success<T>(data: T): ResponseForm<T>(data = data)
     class Error(val exception: Exception) : ResponseForm<Nothing>()
-    data object Loading : ResponseForm<Nothing>()
 }
