@@ -5,6 +5,7 @@ import com.uwange.myownrecipe.data.ResponseForm
 import com.uwange.myownrecipe.data.dao.RecipeDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -21,11 +22,13 @@ class RecipeRepoImpl @Inject constructor(
     }
 
     override fun observeRecipeDB(foodId: Int?): Flow<ResponseForm<List<RecipeItem>>> {
-        return recipeDao.observeRecipeDB(foodId!!)
-            .map { ResponseForm.Success(it) }
-            .catch { e ->
-                ResponseForm.Error(Exception("Failed to observe recipe database", e))
-            }
+        return foodId?.let {
+            recipeDao.observeRecipeDB(it)
+                .map { ResponseForm.Success(it) }
+                .catch { e ->
+                    ResponseForm.Error(Exception("Failed to observe recipe database", e))
+                }
+        }?: flow { emit (ResponseForm.Error(NullPointerException("ObserveRecipeDB FoodId Is Null"))) }
     }
 
     override fun getRecipe(recipeId: Int): ResponseForm<RecipeItem> {
