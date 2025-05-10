@@ -68,10 +68,7 @@ class RecipeEditorFragment : Fragment() {
                 }
                 launch {
                     viewModel.saveState.collectLatest {
-                        if (it)
-                            findNavController().navigate(
-                                RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
-                            )
+                        if (it) findNavController().popBackStack()
                     }
                 }
             }
@@ -125,6 +122,9 @@ class RecipeEditorFragment : Fragment() {
         //TODO Image Setting 처리
 
         //TODO Back Button 처리
+        binding.ibBackBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
 
         binding.ivBookmark.setOnClickListener {

@@ -47,6 +47,10 @@ class FoodEditorFragment : Fragment() {
             viewModel.saveNewFood(binding.etFoodName.text.toString())
         }
 
+        binding.ibBackBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -61,9 +65,7 @@ class FoodEditorFragment : Fragment() {
                 }
                 launch {
                     viewModel.saveState.collect {
-                        if (it) {
-                            findNavController().popBackStack()
-                        }
+                        if (it) findNavController().popBackStack()
                     }
                 }
             }
