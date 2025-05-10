@@ -1,5 +1,6 @@
 package com.uwange.myownrecipe.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -35,8 +36,9 @@ class FoodListViewModel @Inject constructor(
     private var restoreFoodList: List<FoodItem> = savedStateHandle.get<List<FoodItem>>("foodList")?: emptyList()
 
     init {
-        if (restoreFoodList.isNotEmpty())
+        if (restoreFoodList.isNotEmpty()) {
             _itemList.value = restoreFoodList
+        }
 
         fetchData()
     }

@@ -1,5 +1,6 @@
 package com.uwange.myownrecipe.viewModel
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
@@ -36,11 +38,15 @@ class RecipeListViewModel @Inject constructor(
     private var restoreRecipeList: List<RecipeItem> = savedStateHandle.get<List<RecipeItem>>("recipeList") ?: emptyList()
 
     init {
-        if (restoreRecipeList.isNotEmpty() &&
-            foodArgumentData.value.foodId == restoreRecipeList[0].foodId)
-            _itemList.value = restoreRecipeList
+        viewModelScope.launch {
+            foodArgumentData.collectLatest {
+                if (restoreRecipeList.isNotEmpty() &&
+                    it.foodId == restoreRecipeList[0].foodId)
+                    _itemList.value = restoreRecipeList
 
-        fetchData()
+                fetchData()
+            }
+        }
     }
 
     fun setSavedStateData(foodArgumentData: FoodArgumentData) {

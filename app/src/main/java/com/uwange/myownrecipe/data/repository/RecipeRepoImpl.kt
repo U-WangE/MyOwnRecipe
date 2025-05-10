@@ -22,13 +22,11 @@ class RecipeRepoImpl @Inject constructor(
     }
 
     override fun observeRecipeDB(foodId: Int?): Flow<ResponseForm<List<RecipeItem>>> {
-        return foodId?.let {
-            recipeDao.observeRecipeDB(it)
-                .map { ResponseForm.Success(it) }
-                .catch { e ->
-                    ResponseForm.Error(Exception("Failed to observe recipe database", e))
-                }
-        }?: flow { emit (ResponseForm.Error(NullPointerException("ObserveRecipeDB FoodId Is Null"))) }
+        return recipeDao.observeRecipeDB(foodId)
+            .map { ResponseForm.Success(it) }
+            .catch { e ->
+                ResponseForm.Error(Exception("Failed to observe recipe database", e))
+            }
     }
 
     override fun getRecipe(recipeId: Int): ResponseForm<RecipeItem> {

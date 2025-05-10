@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -68,9 +69,10 @@ class RecipeEditorFragment : Fragment() {
                 }
                 launch {
                     viewModel.saveState.collectLatest {
-                        findNavController().navigate(
-                            RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
-                        )
+                        if (it)
+                            findNavController().navigate(
+                                RecipeEditorFragmentDirections.actionRecipeEditorFragmentToRecipeDetailFragment()
+                            )
                     }
                 }
             }

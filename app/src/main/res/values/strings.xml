@@ -13,6 +13,7 @@
 
     <string name="new_recipe">New Recipe</string>
     <string name="food">Food</string>
+    <string name="hint_input_recipe_name">레시피 이름을 입력해 주세요.</string>
     <string name="ingredients">재료</string>
     <string name="recipe_steps">조리순서</string>
     <string name="review">후기</string>

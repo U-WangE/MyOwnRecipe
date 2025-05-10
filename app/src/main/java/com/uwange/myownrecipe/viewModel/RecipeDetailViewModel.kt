@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,16 +37,15 @@ class RecipeDetailViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            foodArgumentData.collect {
+            foodArgumentData.collectLatest {
+                if (restoreRecipeItem != null &&
+                    it.foodId == restoreRecipeItem?.foodId &&
+                    it.recipeId == restoreRecipeItem?.recipeId)
+                    _recipeItem.value = restoreRecipeItem!!
+
+                fetchData()
             }
         }
-        if (restoreRecipeItem != null &&
-            foodArgumentData.value.foodId == restoreRecipeItem?.foodId &&
-            foodArgumentData.value.recipeId == restoreRecipeItem?.recipeId
-        )
-            _recipeItem.value = restoreRecipeItem!!
-
-        fetchData()
     }
 
     fun getMainViewModel(mainViewModel: MainViewModel) {

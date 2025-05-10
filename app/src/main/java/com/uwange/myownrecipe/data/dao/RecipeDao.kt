@@ -13,7 +13,7 @@ interface RecipeDao {
     fun getRecipesByFoodId(foodId: Int): List<RecipeItem>
 
     @Query("Select * From RecipeItem Where foodId = :foodId")
-    fun observeRecipeDB(foodId: Int): Flow<List<RecipeItem>>
+    fun observeRecipeDB(foodId: Int?): Flow<List<RecipeItem>>
 
     @Query("Select * From RecipeItem Where recipeId = :recipeId")
     fun getRecipeByRecipeId(recipeId: Int): RecipeItem?
