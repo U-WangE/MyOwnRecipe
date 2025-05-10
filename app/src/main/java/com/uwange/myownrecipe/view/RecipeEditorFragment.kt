@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,8 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.uwange.myownrecipe.R
-import com.uwange.myownrecipe.Util.formatScoreAsString
-import com.uwange.myownrecipe.Util.setGlideUrlToImage
+import com.uwange.myownrecipe.util.Util.formatScoreAsString
+import com.uwange.myownrecipe.util.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.FoodArgumentData
 import com.uwange.myownrecipe.data.RecipeItem
 import com.uwange.myownrecipe.databinding.FragmentRecipeEditorBinding

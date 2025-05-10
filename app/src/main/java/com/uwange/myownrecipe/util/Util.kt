@@ -1,8 +1,9 @@
-package com.uwange.myownrecipe
+package com.uwange.myownrecipe.util
 
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.uwange.myownrecipe.R
 import java.util.Locale
 
 object Util {

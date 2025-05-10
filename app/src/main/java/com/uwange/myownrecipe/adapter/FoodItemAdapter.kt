@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.uwange.myownrecipe.Util.formatScoreAsString
-import com.uwange.myownrecipe.Util.setGlideUrlToImage
+import com.uwange.myownrecipe.util.Util.formatScoreAsString
+import com.uwange.myownrecipe.util.Util.setGlideUrlToImage
 import com.uwange.myownrecipe.data.FoodItem
 import com.uwange.myownrecipe.databinding.ItemFoodCardBinding
 

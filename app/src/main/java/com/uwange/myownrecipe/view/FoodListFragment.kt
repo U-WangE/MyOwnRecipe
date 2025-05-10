@@ -1,6 +1,8 @@
 package com.uwange.myownrecipe.view
 
+import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +24,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class FoodListFragment : Fragment() {
     private companion object {
-        private const val TAG = "FoodListFragment"
+        private const val KEY_RECYCLER_STATE = "recycler_state"
+        private const val FOOD_ARGUMENT_DATA = "foodArgumentData"
     }
 
     private var _binding: FragmentFoodListBinding? = null
@@ -32,6 +35,7 @@ class FoodListFragment : Fragment() {
     private val viewModel: FoodListViewModel by viewModels()
 
     private lateinit var foodItemAdapter: FoodItemAdapter
+    private var recyclerViewState: Parcelable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +50,22 @@ class FoodListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        recyclerViewState = binding.rvFoodList.layoutManager?.onSaveInstanceState()
+        outState.putParcelable(KEY_RECYCLER_STATE, recyclerViewState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerViewState = savedInstanceState?.let {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU)
+                savedInstanceState.getParcelable(KEY_RECYCLER_STATE)
+            else
+                savedInstanceState.getParcelable(KEY_RECYCLER_STATE, Parcelable::class.java)
+        }
 
         setupFoodRecyclerView()
 
@@ -65,7 +83,12 @@ class FoodListFragment : Fragment() {
                 }
                 launch {
                     viewModel.itemList.collect { itemList ->
-                        foodItemAdapter.submitList(itemList)
+                        foodItemAdapter.submitList(itemList) {
+                            recyclerViewState = recyclerViewState?.let {
+                                binding.rvFoodList.layoutManager?.onRestoreInstanceState(it)
+                                null
+                            }
+                        }
 
                         clickListener()
                     }
@@ -77,8 +100,8 @@ class FoodListFragment : Fragment() {
     private fun setupFoodRecyclerView() {
         foodItemAdapter = FoodItemAdapter { foodId, foodName ->
             // Food Item Click Callback
-            Log.i(TAG, "Food Item Clicked: foodId : $foodId, foodName : $foodName")
-            mainViewModel.saveData("foodArgumentData", FoodArgumentData(foodId, null, foodName))
+            Log.i(this::class.simpleName, "Food Item Clicked: foodId : $foodId, foodName : $foodName")
+            mainViewModel.saveData(FOOD_ARGUMENT_DATA, FoodArgumentData(foodId, null, foodName))
 
             findNavController().navigate(
                 FoodListFragmentDirections.actionFoodListFragmentToRecipeListFragment()

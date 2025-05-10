@@ -61,7 +61,9 @@ class FoodEditorFragment : Fragment() {
                 }
                 launch {
                     viewModel.saveState.collect {
-                        //TODO::PopBackStack
+                        if (it) {
+                            findNavController().popBackStack()
+                        }
                     }
                 }
             }
